@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "lwip_http_server", "examples\lwip_http_server\lwip_http_server.cproj", "{4D8B682F-87DC-4D2F-9C17-5319796A4E00}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd_fat_rw", "examples\sd_fat_rw\sd_fat_rw.cproj", "{DDA620A3-4FCA-40D2-999C-83BA86B054D5}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "free_rtos_debug_print", "examples\free_rtos_debug_print\free_rtos_debug_print.cproj", "{8094E533-4120-4A9E-9185-8B61FC814E37}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "osc_calibration", "examples\osc_calibration\osc_calibration.cproj", "{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}"
+EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger", "anna-logger\anna-logger.cproj", "{DFD50DD3-C915-46B5-B541-01C86891F6FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.Build.0 = Debug|ARM
+		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.ActiveCfg = Release|ARM
+		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.Build.0 = Release|ARM
+		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.Build.0 = Debug|ARM
+		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.ActiveCfg = Release|ARM
+		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.Build.0 = Release|ARM
+		{8094E533-4120-4A9E-9185-8B61FC814E37}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8094E533-4120-4A9E-9185-8B61FC814E37}.Debug|ARM.Build.0 = Debug|ARM
+		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.ActiveCfg = Release|ARM
+		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.Build.0 = Release|ARM
+		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Debug|ARM.Build.0 = Debug|ARM
+		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Release|ARM.ActiveCfg = Release|ARM
+		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Release|ARM.Build.0 = Release|ARM
+		{DFD50DD3-C915-46B5-B541-01C86891F6FF}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DFD50DD3-C915-46B5-B541-01C86891F6FF}.Debug|ARM.Build.0 = Debug|ARM
+		{DFD50DD3-C915-46B5-B541-01C86891F6FF}.Release|ARM.ActiveCfg = Release|ARM
+		{DFD50DD3-C915-46B5-B541-01C86891F6FF}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
