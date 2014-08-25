@@ -63,6 +63,15 @@
 #include <dbg_print.h>
 #include <quick_start_basic/qs_dbg_print_basic.h>
 
+// From module: Delay routines
+#include <delay.h>
+
+// From module: FatFS file system
+#include <diskio.h>
+#include <ff.h>
+#include <ffconf.h>
+#include <integer.h>
+
 // From module: FreeRTOS - kernel 7.5.2
 #include <FreeRTOS.h>
 #include <StackMacros.h>
@@ -82,11 +91,21 @@
 // From module: Interrupt management - SAM implementation
 #include <interrupt.h>
 
+// From module: Memory Control Access Interface
+#include <ctrl_access.h>
+
 // From module: PORT - GPIO Pin Control
 #include <port.h>
 
 // From module: Part identification macros
 #include <parts.h>
+
+// From module: RTC - Real Time Counter in Calendar Mode (Callback APIs)
+#include <rtc_calendar.h>
+#include <rtc_calendar_interrupt.h>
+
+// From module: SD/MMC stack on SPI interface
+#include <sd_mmc.h>
 
 // From module: SERCOM
 #include <sercom.h>
@@ -95,9 +114,6 @@
 // From module: SERCOM SPI - Serial Peripheral Interface (Callback APIs)
 #include <spi.h>
 #include <spi_interrupt.h>
-
-// From module: SERCOM SPI - Serial Peripheral Interface (Master Mode, Vectored I/O)
-#include <spi_master_vec.h>
 
 // From module: SERCOM USART - Serial Communications (Callback APIs)
 #include <usart.h>
@@ -115,5 +131,8 @@
 
 // From module: SYSTEM - Interrupt Driver
 #include <system_interrupt.h>
+
+// From module: Supported ports of FatFS
+#include <diskio.h>
 
 #endif // ASF_H

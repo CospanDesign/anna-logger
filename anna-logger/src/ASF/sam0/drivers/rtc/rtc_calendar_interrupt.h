@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 SPI configuration
+ * \brief SAM D20/D21/R21 RTC Driver (Calendar Interrupt Mode)
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,46 @@
  *
  */
 
+#ifndef RTC_CALENDAR_INTERRUPT_H_INCLUDED
+#define RTC_CALENDAR_INTERRUPT_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+#include "rtc_calendar.h"
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif /* CONF_SPI_H_INCLUDED */
+/**
+ * \addtogroup asfdoc_sam0_rtc_calendar_group
+ * @{
+ */
 
+ /**
+ * \name Callbacks
+ * @{
+ */
+enum status_code rtc_calendar_register_callback(
+		struct rtc_module *const module,
+		rtc_calendar_callback_t callback,
+		enum rtc_calendar_callback callback_type);
+
+enum status_code rtc_calendar_unregister_callback(
+		struct rtc_module *const module,
+		enum rtc_calendar_callback callback_type);
+
+void rtc_calendar_enable_callback(
+		struct rtc_module *const module,
+		enum rtc_calendar_callback callback_type);
+
+void rtc_calendar_disable_callback(
+	struct rtc_module *const module,
+	enum rtc_calendar_callback callback_type);
+
+/** @} */
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* RTC_CALENDAR_INTERRUPT_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 SPI configuration
+ * \brief SD/MMC stack configuration file.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,40 @@
  *
  */
 
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+// Define to enable the SPI mode instead of Multimedia Card interface mode
+#define SD_MMC_SPI_MODE
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
+// Define to enable the SDIO support
+//#define SDIO_SUPPORT_ENABLE
 
-#endif /* CONF_SPI_H_INCLUDED */
+// Define to enable the debug trace to the current standard output (stdio)
+//#define SD_MMC_DEBUG
+
+// Define to memory count
+#define SD_MMC_SPI_MEM_CNT          1
+
+//! Select the SPI module SD/MMC is connected to
+#define SD_MMC_SPI                 SD_SPI_MODULE
+
+#define SD_MMC_SPI_PINMUX_SETTING  SD_SPI_SERCOM_MUX_SETTING
+#define SD_MMC_SPI_PINMUX_PAD0     SD_SPI_SERCOM_PINMUX_PAD0
+#define SD_MMC_SPI_PINMUX_PAD1     SD_SPI_SERCOM_PINMUX_PAD1
+#define SD_MMC_SPI_PINMUX_PAD2     SD_SPI_SERCOM_PINMUX_PAD2
+#define SD_MMC_SPI_PINMUX_PAD3     SD_SPI_SERCOM_PINMUX_PAD3
+
+#define SD_MMC_CS                  SD_SPI_CS_N
+
+#define SD_MMC_0_CD_GPIO           (SD_CARD_DETECT_N)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+
+// Define the SPI clock source
+#define SD_MMC_SPI_SOURCE_CLOCK    GCLK_GENERATOR_0
+
+// Define the SPI max clock
+#define SD_MMC_SPI_MAX_CLOCK       10000000
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
 

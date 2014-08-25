@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SERCOM SPI master with vectored I/O driver configuration
+ * \brief Common Delay Service
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,26 +40,59 @@
  * \asf_license_stop
  *
  */
+#ifndef DELAY_H_INCLUDED
+#define DELAY_H_INCLUDED
 
-#ifndef CONF_SPI_MASTER_VEC_H
-#define CONF_SPI_MASTER_VEC_H
-
-#if defined(__FREERTOS__) || defined(__DOXYGEN__)
-#  include <FreeRTOS.h>
-#  include <semphr.h>
-
-#  define CONF_SPI_MASTER_VEC_OS_SUPPORT
-#  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
-#  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
-		vSemaphoreCreateBinary(semaphore)
-#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
-		vSemaphoreDelete(semaphore)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
-		xSemaphoreTake((semaphore), portMAX_DELAY)
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \
-		xSemaphoreGive((semaphore))
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(semaphore)  \
-		xSemaphoreGiveFromISR((semaphore), NULL)
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#endif // CONF_SPI_MASTER_VEC_H
+#ifdef SYSTICK_MODE
+#include "sam0/systick_counter.h"
+#endif
+#ifdef CYCLE_MODE
+#include "sam0/cycle_counter.h"
+#endif
+
+void delay_init(void);
+
+/**
+ * @defgroup group_common_services_delay Busy-Wait Delay Routines
+ *
+ * This module provides simple loop-based delay routines for those
+ * applications requiring a brief wait during execution. Common for
+ * API ver. 2.
+ *
+ * @{
+ */
+
+/**
+ * \def delay_s
+ * \brief Delay in at least specified number of seconds.
+ * \param delay Delay in seconds
+ */
+#define delay_s(delay)          cpu_delay_s(delay)
+
+/**
+ * \def delay_ms
+ * \brief Delay in at least specified number of milliseconds.
+ * \param delay Delay in milliseconds
+ */
+#define delay_ms(delay)         cpu_delay_ms(delay)
+
+/**
+ * \def delay_us
+ * \brief Delay in at least specified number of microseconds.
+ * \param delay Delay in microseconds
+ */
+#define delay_us(delay)         cpu_delay_us(delay)
+
+#ifdef __cplusplus
+}
+#endif
+
+/**
+ * @}
+ */
+
+#endif /* DELAY_H_INCLUDED */

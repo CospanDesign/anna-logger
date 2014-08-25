@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 SPI configuration
+ * \brief Implementation of low level disk I/O module skeleton for FatFS.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,46 @@
  * \asf_license_stop
  *
  */
+#include "compiler.h"
+#include "rtc_calendar.h"
 
+extern struct rtc_module rtc_instance;
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+uint32_t get_fattime(void);
+/**
+ * \brief Current time returned is packed into a DWORD value.
+ *
+ * The bit field is as follows:
+ *
+ * bit31:25  Year from 1980 (0..127)
+ *
+ * bit24:21  Month (1..12)
+ *
+ * bit20:16  Day in month(1..31)
+ *
+ * bit15:11  Hour (0..23)
+ *
+ * bit10:5   Minute (0..59)
+ *
+ * bit4:0    Second (0..59)
+ *
+ * \return Current time.
+ */
+uint32_t get_fattime(void)
+{
+	uint32_t ul_time;
+	struct rtc_calendar_time current_time;
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
+	/* Retrieve date and time */
+	rtc_calendar_get_time(&rtc_instance, &current_time);
 
-#endif /* CONF_SPI_H_INCLUDED */
+	ul_time = ((current_time.year - 1980) << 25)
+			| (current_time.month << 21)
+			| (current_time.day << 16)
+			| (current_time.hour << 11)
+			| (current_time.minute << 5)
+			| (current_time.second << 0);
+
+	return ul_time;
+}
 
