@@ -37,6 +37,10 @@ static void main_task(void *params)
 {
 	do {
 
+		dbg_print_str("Main task loop executing\r\n");
+		dbg_sprint_hexint(&main_string[23], main_counter++);
+		dbg_print_str(main_string);
+				
 		port_pin_toggle_output_level(LED_0_PIN);
 		vTaskDelay(1000 / portTICK_RATE_MS);
 	} while(1);
@@ -47,15 +51,9 @@ static void main_task(void *params)
 int main (void)
 {
 	system_init();
+	dbg_init();
 	
-	struct port_config pc = {
-		.direction	= PORT_PIN_DIR_OUTPUT_WTH_READBACK,
-		.input_pull = PORT_PIN_PULL_NONE,
-		.powersave	= false
-	};
-	//port_pin_set_output_level(LED_0_PIN, ~port_pin_get_input_level(LED_0_PIN));
-	port_pin_set_config(LED_0_PIN, &pc);
-	port_pin_set_output_level(LED_0_PIN, false);
+
 	
 	
 	xTaskCreate(&main_task,

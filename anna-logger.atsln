@@ -7,8 +7,6 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd_fat_rw", "examples\sd_fa
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "free_rtos_debug_print", "examples\free_rtos_debug_print\free_rtos_debug_print.cproj", "{8094E533-4120-4A9E-9185-8B61FC814E37}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "osc_calibration", "examples\osc_calibration\osc_calibration.cproj", "{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}"
-EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
 EndProject
 Global
@@ -29,10 +27,6 @@ Global
 		{8094E533-4120-4A9E-9185-8B61FC814E37}.Debug|ARM.Build.0 = Debug|ARM
 		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.ActiveCfg = Release|ARM
 		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.Build.0 = Release|ARM
-		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Debug|ARM.ActiveCfg = Debug|ARM
-		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Debug|ARM.Build.0 = Debug|ARM
-		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Release|ARM.ActiveCfg = Release|ARM
-		{4E50CE7C-E227-4C64-94B6-4AF86FF958BF}.Release|ARM.Build.0 = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.ActiveCfg = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM

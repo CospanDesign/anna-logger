@@ -59,6 +59,10 @@
 // From module: Common build items for user board support templates
 #include <user_board.h>
 
+// From module: Debug Print (FreeRTOS)
+#include <dbg_print.h>
+#include <quick_start_basic/qs_dbg_print_basic.h>
+
 // From module: FreeRTOS - kernel 7.5.2
 #include <FreeRTOS.h>
 #include <StackMacros.h>
@@ -94,6 +98,10 @@
 
 // From module: SERCOM SPI - Serial Peripheral Interface (Master Mode, Vectored I/O)
 #include <spi_master_vec.h>
+
+// From module: SERCOM USART - Serial Communications (Callback APIs)
+#include <usart.h>
+#include <usart_interrupt.h>
 
 // From module: SYSTEM - Clock Management for SAMD20
 #include <clock.h>

@@ -22,4 +22,13 @@ void system_board_init(void)
 	 * for, e.g., the I/O pins. The initialization can rely on application-
 	 * specific board configuration, found in conf_board.h.
 	 */
+	
+	struct port_config pc = {
+		.direction	= PORT_PIN_DIR_OUTPUT_WTH_READBACK,
+		.input_pull = PORT_PIN_PULL_NONE,
+		.powersave	= false
+	};
+	//port_pin_set_output_level(LED_0_PIN, ~port_pin_get_input_level(LED_0_PIN));
+	port_pin_set_config(LED_0_PIN, &pc);
+	port_pin_set_output_level(LED_0_PIN, false);
 }
