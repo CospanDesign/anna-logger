@@ -35,4 +35,7 @@ void system_board_init(void)
 	
 	port_pin_set_config(LED_1_PIN, &pc);
 	port_pin_set_output_level(LED_1_PIN, true);	
+	
+	port_pin_set_config(LED_2_PIN, &pc);
+	port_pin_set_output_level(LED_2_PIN, true);	
 }

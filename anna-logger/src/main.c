@@ -28,16 +28,12 @@
 #include <port.h>
 #include "sd_mmc_mem.h"
 
-
-
-
-
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
 
 
 
-static void main_task(void *params)
+static void fatfs_task(void *params)
 {
 	char test_file_name[] = "0:sd_mmc_test.txt";
 	Ctrl_status status;
@@ -105,54 +101,59 @@ static void main_task(void *params)
 
 main_end_of_test:
 	//dbg_print_str("Done!.\n\r");
-	do {
+	while (1) {
 
 		//dbg_print_str("Main task loop executing\r\n");
 		//dbg_sprint_hexint(&main_string[23], main_counter++);
 		//dbg_print_str(main_string);
 				
 		port_pin_toggle_output_level(LED_0_PIN);
-		
-
-		vTaskDelay(1000 / portTICK_RATE_MS);
-	} while(1);
+     	vTaskDelay(1000 / portTICK_RATE_MS);
+	}
 }
 
 static void led_task(void *params)
 {
-	do {
+	while (1) {
 		port_pin_toggle_output_level(LED_1_PIN);
 		vTaskDelay(333 / portTICK_RATE_MS);
-	}while (1);
+	};
+}
+
+static void print_task(void * params){
+	while (1){
+		port_pin_toggle_output_level(LED_2_PIN);
+		vTaskDelay(100 / portTICK_RATE_MS);		
+	}
 }
 
 int main (void)
 {
 	system_init();
-//	dbg_init();
-	// Initialize SD MMC stack
 	sd_mmc_init();
 	
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	
-		
-
-		
-
-	//dbg_print_str("in main...\n\r");	
-	xTaskCreate(&main_task,
-		(const signed char *)"Main task",
+	xTaskCreate(&print_task,
+		(const signed char *)"Print task",
 		configMINIMAL_STACK_SIZE + 400,
 		NULL,
-		tskIDLE_PRIORITY + 2,
+		tskIDLE_PRIORITY + 1,
+		NULL);		
+
+	xTaskCreate(&fatfs_task,
+		(const signed char *)"FAT FS task",
+		configMINIMAL_STACK_SIZE + 400,
+		NULL,
+		tskIDLE_PRIORITY + 3,
 		NULL);
 		
 	xTaskCreate(&led_task,
 		(const signed char *)"LED task",
 		configMINIMAL_STACK_SIZE + 100,
 		NULL,
-		tskIDLE_PRIORITY + 1,
+		tskIDLE_PRIORITY + 2,
 		NULL);
 			
 	vTaskStartScheduler();
