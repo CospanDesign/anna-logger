@@ -1,13 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "lwip_http_server", "examples\lwip_http_server\lwip_http_server.cproj", "{4D8B682F-87DC-4D2F-9C17-5319796A4E00}"
-EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd_fat_rw", "examples\sd_fat_rw\sd_fat_rw.cproj", "{DDA620A3-4FCA-40D2-999C-83BA86B054D5}"
-EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
-EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sam4e_rtos", "examples\sam4e_rtos\sam4e_rtos.cproj", "{3FDE0E40-F361-4714-95E5-5B1E5FD93ECC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,22 +9,10 @@ Global
 		Release|ARM = Release|ARM
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.ActiveCfg = Debug|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.Build.0 = Debug|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.ActiveCfg = Release|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.Build.0 = Release|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.ActiveCfg = Debug|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.Build.0 = Debug|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.ActiveCfg = Release|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.Build.0 = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.ActiveCfg = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.Build.0 = Release|ARM
-		{3FDE0E40-F361-4714-95E5-5B1E5FD93ECC}.Debug|ARM.ActiveCfg = Debug|ARM
-		{3FDE0E40-F361-4714-95E5-5B1E5FD93ECC}.Debug|ARM.Build.0 = Debug|ARM
-		{3FDE0E40-F361-4714-95E5-5B1E5FD93ECC}.Release|ARM.ActiveCfg = Release|ARM
-		{3FDE0E40-F361-4714-95E5-5B1E5FD93ECC}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

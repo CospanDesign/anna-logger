@@ -143,7 +143,7 @@ int main (void)
 	//dbg_print_str("in main...\n\r");	
 	xTaskCreate(&main_task,
 		(const signed char *)"Main task",
-		configMINIMAL_STACK_SIZE + 100,
+		configMINIMAL_STACK_SIZE + 400,
 		NULL,
 		tskIDLE_PRIORITY + 2,
 		NULL);
