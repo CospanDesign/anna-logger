@@ -31,6 +31,7 @@
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
 
+//#define DBG_PRINT_STR(NAME, STR) dbg_print_str("#NAME: " #STR)
 
 
 static void fatfs_task(void *params)
@@ -120,7 +121,8 @@ static void led_task(void *params)
 	};
 }
 
-static void print_task(void * params){
+static void adc_task(void * params){
+	dbg_print_str("In ADC Task\r\n");
 	while (1){
 		port_pin_toggle_output_level(LED_2_PIN);
 		vTaskDelay(100 / portTICK_RATE_MS);		
@@ -130,17 +132,12 @@ static void print_task(void * params){
 int main (void)
 {
 	system_init();
+	dbg_init();	
 	sd_mmc_init();
+
+	//DBG_PRINT_STR(__func__, "Creating tasks\n");
+
 	
-	irq_initialize_vectors();
-	cpu_irq_enable();
-	
-	xTaskCreate(&print_task,
-		(const signed char *)"Print task",
-		configMINIMAL_STACK_SIZE + 400,
-		NULL,
-		tskIDLE_PRIORITY + 1,
-		NULL);		
 
 	xTaskCreate(&fatfs_task,
 		(const signed char *)"FAT FS task",
@@ -155,6 +152,13 @@ int main (void)
 		NULL,
 		tskIDLE_PRIORITY + 2,
 		NULL);
+		
+	xTaskCreate(&adc_task,
+		(const signed char *)"Print task",
+		configMINIMAL_STACK_SIZE + 100,
+		NULL,
+		tskIDLE_PRIORITY + 1,
+		NULL);		
 			
 	vTaskStartScheduler();
 }

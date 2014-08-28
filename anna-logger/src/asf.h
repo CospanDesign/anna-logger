@@ -132,13 +132,7 @@
 // From module: SYSTEM - Interrupt Driver
 #include <system_interrupt.h>
 
-// From module: Standard serial I/O (stdio)
-#include <stdio_serial.h>
-
 // From module: Supported ports of FatFS
 #include <diskio.h>
-
-// From module: USART - Serial interface- SAM implementation for devices with only USART
-#include <serial.h>
 
 #endif // ASF_H
