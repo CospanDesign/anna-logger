@@ -5,6 +5,8 @@ Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-l
 EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "single_adc", "unit_test\single_adc_channel\single_adc\single_adc.cproj", "{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "fred_test", "fred_test\fred_test.cproj", "{05F5BA5C-6952-48C7-8884-3223D7CBC4E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -19,6 +21,10 @@ Global
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Debug|ARM.Build.0 = Debug|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Release|ARM.ActiveCfg = Release|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Release|ARM.Build.0 = Release|ARM
+		{05F5BA5C-6952-48C7-8884-3223D7CBC4E6}.Debug|ARM.ActiveCfg = Debug|ARM
+		{05F5BA5C-6952-48C7-8884-3223D7CBC4E6}.Debug|ARM.Build.0 = Debug|ARM
+		{05F5BA5C-6952-48C7-8884-3223D7CBC4E6}.Release|ARM.ActiveCfg = Release|ARM
+		{05F5BA5C-6952-48C7-8884-3223D7CBC4E6}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

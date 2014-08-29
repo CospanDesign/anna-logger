@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief Preprocessor stringizing utils.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,41 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#ifndef _STRINGZ_H_
+#define _STRINGZ_H_
 
-#include <board.h>
+/**
+ * \defgroup group_sam0_utils_stringz Preprocessor - Stringize
+ *
+ * \ingroup group_sam0_utils
+ *
+ * @{
+ */
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+/** \brief Stringize.
+ *
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
+ *
+ * May be used only within macros with the token passed as an argument if the
+ * token is \#defined.
+ *
+ * For example, writing STRINGZ(PIN) within a macro \#defined by PIN_NAME(PIN)
+ * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
+ * writing "A0".
+ */
+#define STRINGZ(x)                                #x
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
+/** \brief Absolute stringize.
+ *
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
+ *
+ * No restriction of use if the token is \#defined.
+ *
+ * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
+ * equivalent to writing "A0".
+ */
+#define ASTRINGZ(x)                               STRINGZ(x)
 
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
+/** @} */
 
-
-#endif // CONF_DBG_PRINT_H
+#endif  // _STRINGZ_H_

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief Low-level initialization functions called upon chip startup
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,22 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#ifndef _SYSTEM_SAMD20_H_INCLUDED_
+#define _SYSTEM_SAMD20_H_INCLUDED_
 
-#include <board.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+#include <stdint.h>
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
+extern uint32_t SystemCoreClock;   /*!< System Clock Frequency (Core Clock)  */
 
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
+void SystemInit(void);
+void SystemCoreClockUpdate(void);
 
+#ifdef __cplusplus
+}
+#endif
 
-#endif // CONF_DBG_PRINT_H
+#endif /* SYSTEM_SAMD20_H_INCLUDED */

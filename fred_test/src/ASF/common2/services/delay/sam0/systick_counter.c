@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief ARM functions for busy-wait delay loops
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,53 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#include "delay.h"
 
-#include <board.h>
+/**
+ * Value used to calculate ms delay. Default to be used with a 8MHz clock;
+ */
+static uint32_t cycles_per_ms = 8000000UL / 1000;
+static uint32_t cycles_per_us = 8000000UL / 1000000;
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+/**
+ * \brief Initialize the delay driver.
+ *
+ * This must be called during start up to initialize the delay routine with
+ * the current used main clock. It must run any time the main CPU clock is changed.
+ */
+void delay_init(void)
+{
+	cycles_per_ms = system_gclk_gen_get_hz(0);
+	cycles_per_ms /= 1000;
+	cycles_per_us = cycles_per_ms / 1000;
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
+}
 
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
+/**
+ * \brief Delay loop to delay at least n number of microseconds
+ *
+ * \param n  Number of microseconds to wait
+ */
+void delay_cycles_us(
+		uint32_t n)
+{
+	while (n--) {
+		/* Devide up to blocks of 10u */
+		delay_cycles(cycles_per_us);
+	}
+}
 
-
-#endif // CONF_DBG_PRINT_H
+/**
+ * \brief Delay loop to delay at least n number of milliseconds
+ *
+ * \param n  Number of milliseconds to wait
+ */
+void delay_cycles_ms(
+		uint32_t n)
+{
+	while (n--) {
+		/* Devide up to blocks of 1ms */
+		delay_cycles(cycles_per_ms);
+	}
+}

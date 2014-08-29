@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief Instance description for PAC2
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,19 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#ifndef _SAMD20_PAC2_INSTANCE_
+#define _SAMD20_PAC2_INSTANCE_
 
-#include <board.h>
+/* ========== Register definition for PAC2 peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_PAC2_WPCLR             (0x42000000U) /**< \brief (PAC2) Write Protection Clear */
+#define REG_PAC2_WPSET             (0x42000004U) /**< \brief (PAC2) Write Protection Set */
+#else
+#define REG_PAC2_WPCLR             (*(RwReg  *)0x42000000U) /**< \brief (PAC2) Write Protection Clear */
+#define REG_PAC2_WPSET             (*(RwReg  *)0x42000004U) /**< \brief (PAC2) Write Protection Set */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+/* ========== Instance parameters for PAC2 peripheral ========== */
+#define PAC2_WPROT_DEFAULT_VAL      0x00100000
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
-
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
-
-
-#endif // CONF_DBG_PRINT_H
+#endif /* _SAMD20_PAC2_INSTANCE_ */

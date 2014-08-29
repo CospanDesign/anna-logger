@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief Header file for SAMD20
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,48 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#ifndef _SAMD20_
+#define _SAMD20_
 
-#include <board.h>
+/**
+ * \defgroup SAMD20_definitions SAMD20 Device Definitions
+ * \brief SAMD20 CMSIS Definitions.
+ */
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+#if defined(__SAMD20E14__) || defined(__ATSAMD20E14__)
+#include "samd20e14.h"
+#elif defined(__SAMD20E15__) || defined(__ATSAMD20E15__)
+#include "samd20e15.h"
+#elif defined(__SAMD20E16__) || defined(__ATSAMD20E16__)
+#include "samd20e16.h"
+#elif defined(__SAMD20E17__) || defined(__ATSAMD20E17__)
+#include "samd20e17.h"
+#elif defined(__SAMD20E18__) || defined(__ATSAMD20E18__)
+#include "samd20e18.h"
+#elif defined(__SAMD20E1F__) || defined(__ATSAMD20E1F__)
+#include "samd20e1f.h"
+#elif defined(__SAMD20G14__) || defined(__ATSAMD20G14__)
+#include "samd20g14.h"
+#elif defined(__SAMD20G15__) || defined(__ATSAMD20G15__)
+#include "samd20g15.h"
+#elif defined(__SAMD20G16__) || defined(__ATSAMD20G16__)
+#include "samd20g16.h"
+#elif defined(__SAMD20G17__) || defined(__ATSAMD20G17__)
+#include "samd20g17.h"
+#elif defined(__SAMD20G18__) || defined(__ATSAMD20G18__)
+#include "samd20g18.h"
+#elif defined(__SAMD20J14__) || defined(__ATSAMD20J14__)
+#include "samd20j14.h"
+#elif defined(__SAMD20J15__) || defined(__ATSAMD20J15__)
+#include "samd20j15.h"
+#elif defined(__SAMD20J16__) || defined(__ATSAMD20J16__)
+#include "samd20j16.h"
+#elif defined(__SAMD20J17__) || defined(__ATSAMD20J17__)
+#include "samd20j17.h"
+#elif defined(__SAMD20J18__) || defined(__ATSAMD20J18__)
+#include "samd20j18.h"
+#else
+  #error Library does not support the specified device.
+#endif
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
-
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
-
-
-#endif // CONF_DBG_PRINT_H
+#endif /* _SAMD20_ */

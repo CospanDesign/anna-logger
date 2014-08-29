@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Debug print configuration
+ * \brief Syscalls for SAM0 (GCC).
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,88 @@
  *
  */
 
-#ifndef CONF_DBG_PRINT_H
-#define CONF_DBG_PRINT_H
+#include <stdio.h>
+#include <stdarg.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-#include <board.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define CONF_DBG_PRINT_SERCOM        FTDI_HOST_MODULE
-#define CONF_DBG_PRINT_BUFFER_SIZE   128
+#undef errno
+extern int errno;
+extern int _end;
 
-//NOT USING THE CRYSTAL BECAUSE THE UART CONTROLLER DOESN"T SEEM TO GET A LOCK
-//#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_3
-#define CONF_DBG_PRINT_GCLK_SOURCE   GCLK_GENERATOR_0
-#define CONF_DBG_PRINT_BAUD_RATE     115200
-// This BAUD value gives 9600 baud with 48 MHz GCLK
-//#define CONF_DBG_PRINT_BAUD_VALUE    1024
+extern caddr_t _sbrk(int incr);
+extern int link(char *old, char *new);
+extern int _close(int file);
+extern int _fstat(int file, struct stat *st);
+extern int _isatty(int file);
+extern int _lseek(int file, int ptr, int dir);
+extern void _exit(int status);
+extern void _kill(int pid, int sig);
+extern int _getpid(void);
 
-#define CONF_DBG_PRINT_SERCOM_MUX    FTDI_HOST_SERCOM_MUX_SETTING
-#define CONF_DBG_PRINT_PINMUX_PAD0   FTDI_HOST_SERCOM_PINMUX_PAD0
-#define CONF_DBG_PRINT_PINMUX_PAD1   FTDI_HOST_SERCOM_PINMUX_PAD1
-#define CONF_DBG_PRINT_PINMUX_PAD2   FTDI_HOST_SERCOM_PINMUX_PAD2
-#define CONF_DBG_PRINT_PINMUX_PAD3   FTDI_HOST_SERCOM_PINMUX_PAD3
+extern caddr_t _sbrk(int incr)
+{
+	static unsigned char *heap = NULL;
+	unsigned char *prev_heap;
 
+	if (heap == NULL) {
+		heap = (unsigned char *)&_end;
+	}
+	prev_heap = heap;
 
-#endif // CONF_DBG_PRINT_H
+	heap += incr;
+
+	return (caddr_t) prev_heap;
+}
+
+extern int link(char *old, char *new)
+{
+	return -1;
+}
+
+extern int _close(int file)
+{
+	return -1;
+}
+
+extern int _fstat(int file, struct stat *st)
+{
+	st->st_mode = S_IFCHR;
+
+	return 0;
+}
+
+extern int _isatty(int file)
+{
+	return 1;
+}
+
+extern int _lseek(int file, int ptr, int dir)
+{
+	return 0;
+}
+
+extern void _exit(int status)
+{
+	printf("Exiting with status %d.\n", status);
+
+	for (;;);
+}
+
+extern void _kill(int pid, int sig)
+{
+	return;
+}
+
+extern int _getpid(void)
+{
+	return -1;
+}
+
+#ifdef __cplusplus
+}
+#endif
