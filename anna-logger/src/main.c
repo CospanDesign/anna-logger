@@ -122,7 +122,7 @@ static void led_task(void *params)
 }
 
 static void adc_task(void * params){
-	dbg_print_str("In ADC Task\r\n");
+	dbg_print_str("In Fast LED FLash Task\r\n");
 	while (1){
 		port_pin_toggle_output_level(LED_2_PIN);
 		vTaskDelay(100 / portTICK_RATE_MS);		
