@@ -33,7 +33,7 @@
 #define ADC_SAMPLE_RATE_13P75HZ_T	0x1F
 
 
-sensor_type_t * new_ft2248(uint8_t address);
-void delete_ft2248(sensor_type_t * sensor);
+sensor_t * new_ft2248(uint8_t address);
+void delete_ft2248(sensor_t * sensor);
 
 #endif

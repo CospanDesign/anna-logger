@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "free_rtos_debug_print", "examples\free_rtos_debug_print\free_rtos_debug_print.cproj", "{8094E533-4120-4A9E-9185-8B61FC814E37}"
-EndProject
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "single_adc", "unit_test\single_adc_channel\single_adc\single_adc.cproj", "{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}"
-EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "sd_fat_rw", "examples\sd_fat_rw\sd_fat_rw.cproj", "{DDA620A3-4FCA-40D2-999C-83BA86B054D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,18 +15,10 @@ Global
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.Build.0 = Release|ARM
-		{8094E533-4120-4A9E-9185-8B61FC814E37}.Debug|ARM.ActiveCfg = Debug|ARM
-		{8094E533-4120-4A9E-9185-8B61FC814E37}.Debug|ARM.Build.0 = Debug|ARM
-		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.ActiveCfg = Release|ARM
-		{8094E533-4120-4A9E-9185-8B61FC814E37}.Release|ARM.Build.0 = Release|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Debug|ARM.ActiveCfg = Debug|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Debug|ARM.Build.0 = Debug|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Release|ARM.ActiveCfg = Release|ARM
 		{72AF4EAC-1C85-44D9-905C-7F4B59B1C116}.Release|ARM.Build.0 = Release|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.ActiveCfg = Debug|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Debug|ARM.Build.0 = Debug|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.ActiveCfg = Release|ARM
-		{DDA620A3-4FCA-40D2-999C-83BA86B054D5}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

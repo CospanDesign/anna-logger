@@ -61,6 +61,10 @@ int main (void)
 	
 	printf("Hello world!\r\n");
 	
+	sensor_t * adc = new_ft2248(0);
+	
+	
+	
 	//get a reference to the local sensor structure
 	//Type is the LTC2448 Sensor Type and the address is 0
 	//sensor_type *s = new_sensor_struct(LTC2448_SENSOR, 0);
