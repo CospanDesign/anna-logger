@@ -266,13 +266,6 @@ void system_clock_source_xosc_set_config(
 
 	/* Store XOSC frequency for internal use */
 	_system_clock_inst.xosc.frequency = config->frequency;
-	
-	temp.bit.XTALEN = 1;
-	temp.bit.RUNSTDBY = 1;
-	temp.bit.ONDEMAND = 0;
-	temp.bit.AMPGC = 0;
-	temp.bit.GAIN = 3;
-	temp.bit.STARTUP = 3;
 
 	SYSCTRL->XOSC = temp;
 }

@@ -680,10 +680,10 @@ static inline void system_clock_source_xosc_get_config_defaults(
 
 	config->external_clock    = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 	config->startup_time      = SYSTEM_XOSC_STARTUP_16384;
-	config->auto_gain_control = true;
+	config->auto_gain_control = false;
 	config->frequency         = 14745600UL;
-	config->run_in_standby    = false;
-	config->on_demand         = true;
+	config->run_in_standby    = true;
+	config->on_demand         = false;
 }
 
 void system_clock_source_xosc_set_config(
