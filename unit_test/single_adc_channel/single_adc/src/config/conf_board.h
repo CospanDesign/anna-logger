@@ -188,6 +188,7 @@
 #define EEPROM_SPI_MISO           PIN_PB11
 
 //WIFI Defines
+#define WIFI_EN					  PIN_PA07
 #define WIFI_MOSI                 PIN_PA22
 #define WIFI_SCK                  PIN_PA23
 #define WIFI_CS_N                 PIN_PA24

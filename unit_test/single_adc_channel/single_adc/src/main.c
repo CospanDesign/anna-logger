@@ -65,6 +65,13 @@ int main (void)
 	
 	
 	
+	get_all_sensor_data(adc, NULL);
+	get_sensor_data(adc, 0, NULL);
+	update_all_sensor_data(adc);
+	update_sensor_data(adc, 0);
+	set_all_sensor_data(adc, NULL);
+	set_sensor_data(adc, 0, NULL);
+	
 	//get a reference to the local sensor structure
 	//Type is the LTC2448 Sensor Type and the address is 0
 	//sensor_type *s = new_sensor_struct(LTC2448_SENSOR, 0);

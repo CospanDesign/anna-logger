@@ -23,19 +23,47 @@ void system_board_init(void)
 	 * specific board configuration, found in conf_board.h.
 	 */
 	
-	struct port_config pc = {
+	struct port_config pco = {
 		.direction	= PORT_PIN_DIR_OUTPUT_WTH_READBACK,
 		.input_pull = PORT_PIN_PULL_NONE,
 		.powersave	= false
 	};
+	struct port_config pci = {
+		.direction	= PORT_PIN_DIR_INPUT,
+		.input_pull = PORT_PIN_PULL_NONE,
+		.powersave	= false
+	};	
 	//port_pin_set_output_level(LED_0_PIN, ~port_pin_get_input_level(LED_0_PIN));
-	port_pin_set_config(LED_0_PIN, &pc);
+	port_pin_set_config(LED_0_PIN, &pco);
 	port_pin_set_output_level(LED_0_PIN, false);
 	
 	
-	port_pin_set_config(LED_1_PIN, &pc);
+	port_pin_set_config(LED_1_PIN, &pco);
 	port_pin_set_output_level(LED_1_PIN, true);	
 	
-	port_pin_set_config(LED_2_PIN, &pc);
+	port_pin_set_config(LED_2_PIN, &pco);
 	port_pin_set_output_level(LED_2_PIN, true);	
+	
+	//Buttons
+	port_pin_set_config(BUTTON_0_PIN, &pci);
+	port_pin_set_config(BUTTON_1_PIN, &pci);
+	
+	//Setup WIFI Interface
+	port_pin_set_config(WIFI_EN, &pco);
+	port_pin_set_output_level(WIFI_EN, false);
+	
+	port_pin_set_config(WIFI_IRQ_N, &pci);	
+	
+	//Setup the LTC2448 (ADC Interface)
+	port_pin_set_config(CARD_A0, &pco);
+	port_pin_set_config(CARD_A1, &pco);
+	port_pin_set_config(CARD_A2, &pco);
+	port_pin_set_config(CARD_A3, &pco);
+	port_pin_set_config(CARD_A4, &pco);	
+	
+	port_pin_set_output_level(CARD_A0, false);
+	port_pin_set_output_level(CARD_A1, false);
+	port_pin_set_output_level(CARD_A2, false);
+	port_pin_set_output_level(CARD_A3, false);
+	port_pin_set_output_level(CARD_A4, false);
 }

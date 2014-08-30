@@ -44,6 +44,17 @@ void system_board_init(void)
 	port_pin_set_config(LED_2_PIN, &pco);
 	port_pin_set_output_level(LED_2_PIN, true);	
 	
+	//Setup WIFI Interface
+	port_pin_set_config(WIFI_EN, &pco);
+	port_pin_set_config(WIFI_IRQ_N, &pci);
+	port_pin_set_output_level(WIFI_EN, false);
+	
+	//port_pin_set_config(WIFI_SCK, &pco);
+	//port_pin_set_config(WIFI_CS_N, &pco);
+	//port_pin_set_config(WIFI_MOSI, &pco);
+	
+	//port_pin_set_config(WIFI_MISO, &pci);
+	
 	//Setup the LTC2448 (ADC Interface)
 	port_pin_set_config(CARD_A0, &pco);
 	port_pin_set_config(CARD_A1, &pco);
@@ -51,9 +62,15 @@ void system_board_init(void)
 	port_pin_set_config(CARD_A3, &pco);
 	port_pin_set_config(CARD_A4, &pco);
 	
-	port_pin_set_config(CARD_SCK, &pco);
-	port_pin_set_config(CARD_CS_N, &pco);
-	port_pin_set_config(CARD_MOSI, &pco);
+	port_pin_set_output_level(CARD_A0, false);
+	port_pin_set_output_level(CARD_A1, false);
+	port_pin_set_output_level(CARD_A2, false);
+	port_pin_set_output_level(CARD_A3, false);
+	port_pin_set_output_level(CARD_A4, false);
+	
+	//port_pin_set_config(CARD_SCK, &pco);
+	//port_pin_set_config(CARD_CS_N, &pco);
+	//port_pin_set_config(CARD_MOSI, &pco);
 		
-	port_pin_set_config(CARD_MISO, &pci);
+	//port_pin_set_config(CARD_MISO, &pci);
 }

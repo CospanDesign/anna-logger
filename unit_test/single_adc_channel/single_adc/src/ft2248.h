@@ -36,4 +36,11 @@
 sensor_t * new_ft2248(uint8_t address);
 void delete_ft2248(sensor_t * sensor);
 
+void ft2248_update_all_sensor_data(sensor_t *sensor);
+void ft2248_update_sensor_data(sensor_t *sensor, uint8_t channel);
+void ft2248_get_sensor_data(sensor_t * sensor, uint8_t channel, void * data);
+void ft2248_get_all_sensor_data(sensor_t * sensor, void * data);
+void ft2248_set_sensor_data(sensor_t * sensor, uint8_t channel, void * data);
+void ft2248_set_all_sensor_data(sensor_t *sensor, void *data);
+
 #endif
