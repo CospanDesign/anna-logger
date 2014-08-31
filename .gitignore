@@ -15,6 +15,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+*.atsuo
 
 # External tool builders
 .externalToolBuilders/
