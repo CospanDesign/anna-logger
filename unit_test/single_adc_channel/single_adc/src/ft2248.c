@@ -55,12 +55,13 @@ void ft2248_update_all_sensor_data(sensor_t *sensor){
 	printf ("%s Entered\r\n", __func__);
 	
 }
+#define WAIT_TIME 100
 void ft2248_update_sensor_data(sensor_t *sensor, uint8_t channel){
 	ft2248_t * ft2248 = (ft2248_t *) sensor->data;
 	//printf ("%s Entered\r\n", __func__);
 	
-	//uint32_t output_value = 0xB000FFFF;
-	uint32_t output_value = 0xA000FFFF;
+	uint32_t output_value = 0xB000FFFF;
+	//uint32_t output_value = 0xA000FFFF;
 	uint32_t input_value  = 0x00000000;
 	output_value |= channel << 24;
 	output_value |= ft2248->speed << 19;
@@ -73,7 +74,7 @@ void ft2248_update_sensor_data(sensor_t *sensor, uint8_t channel){
 		//Set MOSI to the 15th bit
 		port_pin_set_output_level(CARD_MOSI, ((output_value >> 31) & 1));
 //XXX: DELAY will be different with and without the RTOS
-		delay_cycles_ms(5);
+		delay_cycles_ms(WAIT_TIME);
 		output_value = output_value << 1;
 		port_pin_set_output_level(CARD_SCK, HIGH);
 
@@ -83,7 +84,7 @@ void ft2248_update_sensor_data(sensor_t *sensor, uint8_t channel){
 		input_value = input_value << 1;
 
 //XXX: DELAY will be different with and without the RTOS
-		delay_cycles_ms(5);		
+		delay_cycles_ms(WAIT_TIME);		
 		
 		port_pin_set_output_level(CARD_SCK, LOW);
 

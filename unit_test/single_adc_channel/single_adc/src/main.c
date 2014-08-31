@@ -71,7 +71,7 @@ int main (void)
 	//Good Speed, little Noise
 	//ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_3P52KHZ);
 	
-	ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_1P76KHZ);
+	ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_55HZ);
 	
 	
 	

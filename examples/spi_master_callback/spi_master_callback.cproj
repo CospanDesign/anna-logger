@@ -191,7 +191,7 @@
         <documentation help="" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.19.0" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.6.0" />
         </dependencies>
         <project id="sam0.drivers.sercom.spi.quick_start_master_callback.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
         <board id="board.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
