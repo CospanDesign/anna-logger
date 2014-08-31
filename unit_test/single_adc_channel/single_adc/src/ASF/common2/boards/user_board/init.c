@@ -68,9 +68,12 @@ void system_board_init(void)
 	port_pin_set_output_level(CARD_A3, false);
 	port_pin_set_output_level(CARD_A4, false);
 	
-	//port_pin_set_config(CARD_SCK, &pco);
-	//port_pin_set_config(CARD_CS_N, &pco);
-	//port_pin_set_config(CARD_MOSI, &pco);
+	port_pin_set_config(CARD_SCK, &pco);
+	port_pin_set_output_level(CARD_SCK, false);
+	port_pin_set_config(CARD_CS_N, &pco);
+	port_pin_set_output_level(CARD_CS_N, true);
+	port_pin_set_config(CARD_MOSI, &pco);
+	port_pin_set_output_level(CARD_MOSI, false);
 		
-	//port_pin_set_config(CARD_MISO, &pci);
+	port_pin_set_config(CARD_MISO, &pci);
 }

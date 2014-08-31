@@ -25,6 +25,7 @@
  * Atmel Software Framework (ASF).
  */
 #include <asf.h>
+#include <stdint.h>
 #include <main.h>
 #include <ft2248.h>
 
@@ -54,6 +55,7 @@ static void initialize_stdio(void){
 
 int main (void)
 {
+	uint32_t data;
 	system_init();
 	delay_init();
 	
@@ -63,14 +65,22 @@ int main (void)
 	
 	sensor_t * adc = new_ft2248(0);
 	
+	//SLOW
+	//ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_6P875HZ);
+	
+	//Good Speed, little Noise
+	//ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_3P52KHZ);
+	
+	ft2248_set_speed(adc, (uint8_t) ADC_SAMPLE_RATE_1P76KHZ);
 	
 	
-	get_all_sensor_data(adc, NULL);
-	get_sensor_data(adc, 0, NULL);
-	update_all_sensor_data(adc);
-	update_sensor_data(adc, 0);
-	set_all_sensor_data(adc, NULL);
-	set_sensor_data(adc, 0, NULL);
+	
+	//get_all_sensor_data(adc, NULL);
+	
+	//update_all_sensor_data(adc);
+
+	//set_all_sensor_data(adc, NULL);
+	//set_sensor_data(adc, 0, NULL);
 	
 	//get a reference to the local sensor structure
 	//Type is the LTC2448 Sensor Type and the address is 0
@@ -79,7 +89,15 @@ int main (void)
 	// Insert application code here, after the board has been initialized.
 	while (1){
 		port_pin_toggle_output_level(LED_0_PIN);
-		delay_cycles_ms(200);
+		
+		
+		
+		//Update the sensor
+		update_sensor_data(adc, 0); //Last Value indicates the 'next channel' to read
+		get_sensor_data(adc, 0, &data);
+			
+		printf ("Data: 0x%08X\r\n", data);
+		//delay_cycles_ms(10);
 			
 	}
 }

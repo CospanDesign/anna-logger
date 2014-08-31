@@ -43,4 +43,7 @@ void ft2248_get_all_sensor_data(sensor_t * sensor, void * data);
 void ft2248_set_sensor_data(sensor_t * sensor, uint8_t channel, void * data);
 void ft2248_set_all_sensor_data(sensor_t *sensor, void *data);
 
+//FT2248 Specific Features
+void ft2248_set_speed(sensor_t * sensor, uint8_t speed);
+
 #endif
