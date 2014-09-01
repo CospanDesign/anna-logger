@@ -9,7 +9,6 @@
 #include <board.h>
 #include <conf_board.h>
 #include <user_board.h>
-#include <spi.h>
 #include <usart.h>
 
 void configure_anna_sdmicro_spi( void );
