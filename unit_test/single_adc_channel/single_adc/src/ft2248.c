@@ -55,7 +55,7 @@ void ft2248_update_all_sensor_data(sensor_t *sensor){
 	printf ("%s Entered\r\n", __func__);
 	
 }
-#define WAIT_TIME 100
+#define WAIT_TIME 5
 void ft2248_update_sensor_data(sensor_t *sensor, uint8_t channel){
 	ft2248_t * ft2248 = (ft2248_t *) sensor->data;
 	//printf ("%s Entered\r\n", __func__);
