@@ -36,6 +36,7 @@
           <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
           <option id="thirdparty.os.freertos-7_5_2" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.sercom.spi_master_vec" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.utils.linker_scripts" value="Add" config="" content-id="Atmel.ASF" />
         </options>
         <configurations>
@@ -292,7 +293,7 @@
           <file path="src/ASF/sam0/drivers/sercom/spi/spi.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi\spi.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/sercom/spi/quick_start_slave/qs_spi_slave_basic.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi\quick_start_slave\qs_spi_slave_basic.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/sercom/spi/quick_start_master/qs_spi_master_basic.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi\quick_start_master\qs_spi_master_basic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/Config/conf_spi.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi\module_config\conf_spi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_spi.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi_master_vec\module-config\conf_spi.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/thirdparty/fatfs/fatfs-port-r0.09/sam0/fattime_rtc.c" framework="" version="3.17.0" source="thirdparty\fatfs\fatfs-port-r0.09\sam0\fattime_rtc.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/thirdparty/fatfs/fatfs-port-r0.09/diskio.c" framework="" version="3.17.0" source="thirdparty\fatfs\fatfs-port-r0.09\diskio.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/thirdparty/fatfs/fatfs-r0.09/src/option/ccsbcs.c" framework="" version="3.17.0" source="thirdparty\fatfs\fatfs-r0.09\src\option\ccsbcs.c" changed="False" content-id="Atmel.ASF" />
@@ -312,6 +313,10 @@
           <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.c" framework="" version="3.17.0" source="sam0\drivers\sercom\usart\usart_interrupt.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.h" framework="" version="3.17.0" source="sam0\drivers\sercom\usart\usart_interrupt.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/sercom/usart/quick_start_callback/qs_usart_callback.h" framework="" version="3.17.0" source="sam0\drivers\sercom\usart\quick_start_callback\qs_usart_callback.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam0/drivers/sercom/spi_master_vec/spi_master_vec.c" framework="" version="3.17.0" source="sam0\drivers\sercom\spi_master_vec\spi_master_vec.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam0/drivers/sercom/spi_master_vec/quick_start_basic/qs_spi_master_vec_basic.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi_master_vec\quick_start_basic\qs_spi_master_vec_basic.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam0/drivers/sercom/spi_master_vec/spi_master_vec.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi_master_vec\spi_master_vec.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_spi_master_vec.h" framework="" version="3.17.0" source="sam0\drivers\sercom\spi_master_vec\module-config\conf_spi_master_vec.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.17.0/common.applications.user_application.sam0_system.user_board.atsamd20g18/html/index.html" />
         <offline-documentation help="" />
@@ -322,11 +327,12 @@
         <board id="board.user_board.samd20g" value="Add" config="" content-id="Atmel.ASF" />
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.edbg</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
     <avrtoolinterface>SWD</avrtoolinterface>
     <com_atmel_avrdbg_tool_atmelice>
       <ToolOptions>
         <InterfaceProperties>
+          <SwdClock>2000000</SwdClock>
         </InterfaceProperties>
         <InterfaceName>SWD</InterfaceName>
       </ToolOptions>
@@ -337,7 +343,6 @@
     <com_atmel_avrdbg_tool_edbg>
       <ToolOptions>
         <InterfaceProperties>
-          <SwdClock>4000000</SwdClock>
         </InterfaceProperties>
         <InterfaceName>SWD</InterfaceName>
       </ToolOptions>
@@ -561,6 +566,10 @@
       <Value>../src/ASF/thirdparty/fatfs/fatfs-port-r0.09/sam0</Value>
       <Value>../src/ASF/sam0/utils/stdio/stdio_serial</Value>
       <Value>../src/ASF/common/services/serial</Value>
+      <Value>../../common/board</Value>
+      <Value>../../common/sd_fat</Value>
+      <Value>../../common/wifi</Value>
+      <Value>../../common/wifi/CC3000HostDriver</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
@@ -582,6 +591,7 @@
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
   <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam0/utils/linker_scripts/samd20/gcc/samd20g18_flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0=true -DBOARD=USER_BOARD -D__FREERTOS__ -DRTC_CALENDAR_ASYNC=true -DSYSTICK_MODE -DSPI_CALLBACK_MODE=true -DUSART_CALLBACK_MODE=true</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -669,6 +679,8 @@
     <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_master_callback\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\spi\quick_start_slave_callback\" />
+    <Folder Include="src\ASF\sam0\drivers\sercom\spi_master_vec\" />
+    <Folder Include="src\ASF\sam0\drivers\sercom\spi_master_vec\quick_start_basic\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\quick_start\" />
     <Folder Include="src\ASF\sam0\drivers\sercom\usart\quick_start_callback\" />
@@ -723,8 +735,105 @@
     <Folder Include="src\ASF\thirdparty\freertos\freertos-7.5.2\Source\portable\GCC\ARM_CM0\" />
     <Folder Include="src\ASF\thirdparty\freertos\freertos-7.5.2\Source\portable\MemMang\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\WIFI" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\board\conf_clocks.h">
+      <SubType>compile</SubType>
+      <Link>src\config\conf_clocks.h</Link>
+    </Compile>
+    <Compile Include="..\common\board\init.c">
+      <SubType>compile</SubType>
+      <Link>src\ASF\common2\boards\user_board\init.c</Link>
+    </Compile>
+    <Compile Include="..\common\board\user_board.h">
+      <SubType>compile</SubType>
+      <Link>src\ASF\common2\boards\user_board\user_board.h</Link>
+    </Compile>
+    <Compile Include="..\common\sd_fat\sd_mmc_mem.c">
+      <SubType>compile</SubType>
+      <Link>src\sd_mmc_mem.c</Link>
+    </Compile>
+    <Compile Include="..\common\sd_fat\sd_mmc_mem.h">
+      <SubType>compile</SubType>
+      <Link>src\sd_mmc_mem.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\anna_logger_wifi.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\anna_logger_wifi.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\anna_logger_wifi.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\anna_logger_wifi.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\cc3000_common.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\cc3000_common.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\cc3000_common.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\cc3000_common.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\evnt_handler.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\evnt_handler.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\evnt_handler.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\evnt_handler.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\hci.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\hci.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\hci.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\hci.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\host_driver_version.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\host_driver_version.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\netapp.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\netapp.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\netapp.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\netapp.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\nvmem.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\nvmem.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\nvmem.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\nvmem.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\os.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\os.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\os.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\os.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\socket.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\socket.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\socket.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\socket.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\wlan.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\wlan.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\wlan.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\wlan.h</Link>
+    </Compile>
     <Compile Include="src\ASF\common2\components\memory\sd_mmc\sd_mmc.c">
       <SubType>compile</SubType>
     </Compile>
@@ -767,18 +876,24 @@
     <None Include="src\ASF\sam0\drivers\sercom\usart\quick_start_callback\qs_usart_callback.h">
       <SubType>compile</SubType>
     </None>
+    <None Include="src\ASF\sam0\drivers\sercom\spi_master_vec\quick_start_basic\qs_spi_master_vec_basic.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\sam0\drivers\sercom\spi_master_vec\spi_master_vec.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam0\drivers\sercom\spi_master_vec\spi_master_vec.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam0\drivers\sercom\usart\usart_interrupt.c">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\sam0\drivers\sercom\usart\usart_interrupt.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\sd_mmc_mem.c">
+    <None Include="src\config\conf_spi_master_vec.h">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sd_mmc_mem.h">
-      <SubType>compile</SubType>
-    </Compile>
+    </None>
     <None Include="src\ASF\common2\components\memory\sd_mmc\sd_mmc.h">
       <SubType>compile</SubType>
     </None>
@@ -1136,9 +1251,6 @@
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\ASF\common2\boards\user_board\init.c">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="src\ASF\sam0\drivers\system\interrupt\system_interrupt.h">
       <SubType>compile</SubType>
     </None>
@@ -1185,9 +1297,6 @@
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\thirdparty\freertos\freertos-7.5.2\Source\readme.txt">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\config\conf_clocks.h">
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\sam0\utils\cmsis\samd20\include\component\component_wdt.h">
@@ -1323,9 +1432,6 @@
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\sam0\drivers\system\pinmux\pinmux.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\common2\boards\user_board\user_board.h">
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\sam0\utils\cmsis\samd20\include\instance\instance_tc1.h">

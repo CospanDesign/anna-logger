@@ -27,6 +27,7 @@
 #include <asf.h>
 #include <port.h>
 #include "sd_mmc_mem.h"
+#include "anna_logger_wifi.h"
 
 uint32_t main_counter;
 char main_string[] = "Main task iteration: 0x00000000\r\n";
@@ -108,7 +109,7 @@ main_end_of_test:
 		//dbg_sprint_hexint(&main_string[23], main_counter++);
 		//dbg_print_str(main_string);
 				
-		port_pin_toggle_output_level(LED_0_PIN);
+		port_pin_toggle_output_level(ANNA_LED_GRN_PIN);
      	vTaskDelay(1000 / portTICK_RATE_MS);
 	}
 }
@@ -116,7 +117,7 @@ main_end_of_test:
 static void led_task(void *params)
 {
 	while (1) {
-		port_pin_toggle_output_level(LED_1_PIN);
+		port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
 		vTaskDelay(333 / portTICK_RATE_MS);
 	};
 }
@@ -124,7 +125,7 @@ static void led_task(void *params)
 static void adc_task(void * params){
 	dbg_print_str("In Fast LED FLash Task\r\n");
 	while (1){
-		port_pin_toggle_output_level(LED_2_PIN);
+		port_pin_toggle_output_level(ANNA_LED_WIFI_PIN);
 		vTaskDelay(100 / portTICK_RATE_MS);		
 	}
 }
@@ -134,6 +135,8 @@ int main (void)
 	system_init();
 	dbg_init();	
 	sd_mmc_init();
+	spi_wifi_init();
+	
 
 	//DBG_PRINT_STR(__func__, "Creating tasks\n");
 

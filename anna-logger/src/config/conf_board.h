@@ -47,16 +47,18 @@
 //#define BOARD_NAME                "ANNA_LOGGER_REV_A"
 
 //Clocks
-#define BOARD_FREQ_SLCK_XTAL      0 /* Not Mounted */
-#define BOARD_FREQ_SLCK_BYPASS    0 /* Not Mounted */
+/*
+#define BOARD_FREQ_SLCK_XTAL      0 // Not Mounted
+#define BOARD_FREQ_SLCK_BYPASS    0 // Not Mounted
 #define BOARD_FREQ_MAINCK_XTAL    (14756400U)
 #define BOARD_FREQ_MAINCK_BYPASS  (14756400U)
 #define BOARD_MCK                 CHIP_FREQ_CPU_MAX
 #define BOARD_OSC_STARTUP_US      15625
-
+*/
 
 
 //LEDs
+/*
 
 
 //name LED0 definitions
@@ -97,7 +99,7 @@
 #define LED_2_INACTIVE            LED2_INACTIVE
 #define LED2_GPIO 				        LED2_PIN
 
-/** Number of on-board LEDs */
+// Number of on-board LEDs
 #define LED_COUNT                 3
 
 
@@ -148,7 +150,7 @@
 
 
 
-/** Number of on-board buttons */
+// Number of on-board buttons
 #define BUTTON_COUNT 2
 
 
@@ -210,5 +212,5 @@
 #define CARD_CS_N                 PIN_PA18
 #define CARD_MISO                 PIN_PA19
 #define CARD_MOSI                 PIN_PA16
-
+*/
 #endif // CONF_BOARD_H
