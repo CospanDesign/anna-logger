@@ -52,7 +52,7 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-// From module: Common SAM0 compiler driver
+// From module: Common SAM D20 compiler driver
 #include <compiler.h>
 #include <status_codes.h>
 
@@ -61,6 +61,19 @@
 
 // From module: Delay routines
 #include <delay.h>
+
+// From module: FreeRTOS - kernel 7.5.2
+#include <FreeRTOS.h>
+#include <StackMacros.h>
+#include <croutine.h>
+#include <list.h>
+#include <mpu_wrappers.h>
+#include <portable.h>
+#include <projdefs.h>
+#include <queue.h>
+#include <semphr.h>
+#include <task.h>
+#include <timers.h>
 
 // From module: Generic board support
 #include <board.h>
