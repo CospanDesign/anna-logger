@@ -158,6 +158,11 @@ void system_board_init(void);
 #define WIFI_IRQ_PIN              PIN_PA21A_EIC_EXTINT5
 #define WIFI_IRQ_MUX              MUX_PA21A_EIC_EXTINT5
 #define WIFI_IRQ_PINMUX           PINMUX_PA21A_EIC_EXTINT5
+
+#define WIFI_IRQ_CHANNEL                  5
+
+#define ANNA_WIFI_IRQ_PIN                 PIN_PA21
+
 /** @} */
 
 /** \name WIFI SPI definitions
@@ -171,6 +176,8 @@ void system_board_init(void);
 #define ANNA_WIFI_SPI_SERCOM_PINMUX_PAD3  PINMUX_PA25C_SERCOM3_PAD3 //WIFI_MISO
 
 #define ANNA_WIFI_CS_N                    PIN_PA24
+
+#define ANNA_WIFI_EN					  PIN_PA07
 /** @} */
 
 /** \name EEPROM SPI definitions

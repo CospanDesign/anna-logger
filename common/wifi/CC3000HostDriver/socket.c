@@ -1043,9 +1043,11 @@ simple_link_send(int16_t sd, const void *buf, int16_t len, int16_t flags,
 {    
     uint8_t uArgSize = 0;
 	uint8_t addrlen;
-    uint8_t *ptr, *pDataPtr, *args;
-    uint32_t addr_offset;
-    int res;
+    uint8_t *ptr = NULL;
+	uint8_t *pDataPtr = NULL;
+	uint8_t *args = NULL;
+    uint32_t addr_offset = 0;
+    int res = 0;
 
 
     //

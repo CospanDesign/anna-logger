@@ -46,12 +46,17 @@ void system_board_init(void)
 	port_pin_set_config(ANNA_LED_GRN_PIN, &pco);
 	port_pin_set_output_level(ANNA_LED_GRN_PIN, LOW);
 	
-	
 	port_pin_set_config(ANNA_LED_ORG_PIN, &pco);
 	port_pin_set_output_level(ANNA_LED_ORG_PIN, HIGH);	
 	
 	port_pin_set_config(ANNA_LED_WIFI_PIN, &pco);
 	port_pin_set_output_level(ANNA_LED_WIFI_PIN, HIGH);	
+	
+	//Set Buttons
+	port_pin_set_config(ANNA_BUTTON_GRN_PIN, &pci);
+	port_pin_set_config(ANNA_BUTTON_ORG_PIN, &pci);
+	
+	
 	
 	//Setup the LTC2448 (ADC Interface)
 	port_pin_set_config(ANNA_CARD_A0_PIN, &pco);
@@ -66,6 +71,13 @@ void system_board_init(void)
 	port_pin_set_output_level(ANNA_CARD_A3_PIN, false);
 	port_pin_set_output_level(ANNA_CARD_A4_PIN, false);
 
+	
+	//Set up WIFI interrupt pin
+	port_pin_set_config(ANNA_WIFI_EN, &pco);
+	port_pin_set_output_level(ANNA_WIFI_EN, LOW);
+	
+	port_pin_set_config(ANNA_WIFI_CS_N, &pco);
+	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
 	
     //configure_anna_sdmicro_spi();
     configure_anna_wifi_spi();
@@ -104,7 +116,7 @@ void configure_anna_wifi_spi( void )
 	spi_master_vec_get_config_defaults(&spi_config);
 	
     spi_config.baudrate = 200000;
-    spi_config.transfer_mode = SPI_TRANSFER_MODE_0;
+    spi_config.transfer_mode = SPI_TRANSFER_MODE_1;
     spi_config.mux_setting = ANNA_WIFI_SPI_SERCOM_MUX_SETTING;
     spi_config.pinmux_pad0 = ANNA_WIFI_SPI_SERCOM_PINMUX_PAD0;
     spi_config.pinmux_pad1 = ANNA_WIFI_SPI_SERCOM_PINMUX_PAD1;

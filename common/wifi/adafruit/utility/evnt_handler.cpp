@@ -467,7 +467,7 @@ UINT8 * hci_event_handler(void *pRetParams, UINT8 *from, UINT8 *fromlen)
 				// are not null is in recv from, so fill the args accordingly
 				if (from)
 				{
-					STREAM_TO_UINT32((CHAR *)(pucReceivedData + HCI_DATA_HEADER_SIZE), BSD_RECV_FROM_FROMLEN_OFFSET, *(UINT32 *)fromlen);
+					STREAM_TO_UINT32((CHAR *)(pucReceivedData + HCI_DATA_HEADER_SIZE), 							BSD_RECV_FROM_FROMLEN_OFFSET, *(UINT32 *)fromlen);
 					memcpy(from, (pucReceivedData + HCI_DATA_HEADER_SIZE + BSD_RECV_FROM_FROM_OFFSET) ,*fromlen);
 				}
 

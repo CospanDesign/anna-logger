@@ -26,17 +26,9 @@
  */
 #include <asf.h>
 #include <port.h>
-#include "sd_mmc_mem.h"
+#include <sd_mmc_mem.h>
 #include <anna_logger_wifi.h>
-
-
 #include <cc3000_common.h>
-
-uint32_t main_counter;
-//char main_string[] = "Main task iteration: 0x00000000\r\n";
-
-//#define DBG_PRINT_STR(NAME, STR) dbg_print_str("#NAME: " #STR)
-
 
 static void fatfs_task(void *params)
 {
@@ -46,10 +38,7 @@ static void fatfs_task(void *params)
 	FATFS fs;
 	FIL file_object;
 
-	//dbg_print_str("Starting...\n\r");
 	// Wait card present and ready
-	//vTaskDelay(1000 / portTICK_RATE_MS);
-
 	do {
 		status = sd_mmc_test_unit_ready(0);
 		if (CTRL_FAIL == status) {
@@ -62,8 +51,6 @@ static void fatfs_task(void *params)
 	} while (CTRL_GOOD != status);
 
 	//dbg_print_str("Mount disk (f_mount)...\r\n");
-	//vTaskDelay(1000 / portTICK_RATE_MS);
-
 	memset(&fs, 0, sizeof(FATFS));
 	res = f_mount(LUN_ID_SD_MMC_0_MEM, &fs);
 	if (FR_INVALID_DRIVE == res) {
@@ -77,7 +64,6 @@ static void fatfs_task(void *params)
 
 	//dbg_print_str("Create a file (f_open)...\r\n");
 	test_file_name[0] = LUN_ID_SD_MMC_0_MEM + '0';
-	//vTaskDelay(1000 / portTICK_RATE_MS);
 
 	res = f_open(&file_object,
 	(char const *)test_file_name,
@@ -89,7 +75,6 @@ static void fatfs_task(void *params)
 		goto main_end_of_test;
 	}
 	//dbg_print_str("[OK]\r\n");
-	//vTaskDelay(1000 / portTICK_RATE_MS);
 	//dbg_print_str("Write to test file (f_puts)...\r\n");
 	
 	if (0 == f_puts("Test SD/MMC stack\n", &file_object)) {
@@ -138,13 +123,9 @@ int main (void)
 	system_init();
 	dbg_init();	
 	sd_mmc_init();
-	spi_wifi_init();
-	
+	//spi_wifi_init();
 
 	//DBG_PRINT_STR(__func__, "Creating tasks\n");
-
-	
-
 	xTaskCreate(&fatfs_task,
 		(const signed char *)"FAT FS task",
 		configMINIMAL_STACK_SIZE + 400,

@@ -121,19 +121,21 @@ static void SimpleLink_Init_Start(uint16_t usPatchesAvailableAtHost)
  *
  *
  * \param[in]   sWlanCB  Asynchronous events callback. 0 no 
- *       event call back.\n
- *       call back parameters:\n 
- *       1) event_type: HCI_EVNT_WLAN_UNSOL_CONNECT connect
- *       event, HCI_EVNT_WLAN_UNSOL_DISCONNECT disconnect
- *       event, HCI_EVNT_WLAN_ASYNC_SIMPLE_CONFIG_DONE config
- *       done, HCI_EVNT_WLAN_UNSOL_DHCP dhcp report, 
- *       HCI_EVNT_WLAN_ASYNC_PING_REPORT ping report OR 
- *       HCI_EVNT_WLAN_KEEPALIVE keepalive\n
- *       2)  data: pointer to extra data that received by the event (NULL no data)\n
- *       3)  length: data length\n
- *       Events with extra data:\n
- *       HCI_EVNT_WLAN_UNSOL_DHCP: 4 bytes IP, 4 bytes Mask, 4 bytes default gateway, 4 bytes DHCP server and 4 bytes for DNS server\n
- *       HCI_EVNT_WLAN_ASYNC_PING_REPORT: 4 bytes Packets sent, 4 bytes Packets received, 4 bytes Min round time, 4 bytes Max round time and 4 bytes for Avg round time\n
+ *				event call back.\n
+ *              call back parameters:\n
+ *
+ *              1)	event_type: HCI_EVNT_WLAN_UNSOL_CONNECT connect
+ *					event, HCI_EVNT_WLAN_UNSOL_DISCONNECT disconnect
+ *					event, HCI_EVNT_WLAN_ASYNC_SIMPLE_CONFIG_DONE config
+ *					done, HCI_EVNT_WLAN_UNSOL_DHCP dhcp report,
+ *					HCI_EVNT_WLAN_ASYNC_PING_REPORT ping report OR
+ *					HCI_EVNT_WLAN_KEEPALIVE keepalive\n
+ *              2)  data: pointer to extra data that received by the event (NULL no data)\n
+ *              3)  length: data length\n
+ *					Events with extra data:\n
+ *					HCI_EVNT_WLAN_UNSOL_DHCP: 4 bytes IP, 4 bytes Mask, 4 bytes default gateway, 4 bytes DHCP server and 4 bytes for DNS server\n
+ *					HCI_EVNT_WLAN_ASYNC_PING_REPORT: 4 bytes Packets sent, 4 bytes Packets received, 4 bytes Min round time, 4 bytes Max round time and 4 bytes for Avg round time\n
+ *
  * \param[in]   sFWPatches  0 no patch or pointer to FW patch 
  * \param[in]   sDriverPatches  0 no patch or pointer to driver 
  *       patch
@@ -156,14 +158,14 @@ static void SimpleLink_Init_Start(uint16_t usPatchesAvailableAtHost)
  * \warning     this function must be called before ANY other 
  *              wlan driver function
  */
-void wlan_init(		tWlanCB	 	sWlanCB,
-	   			tFWPatches sFWPatches,
-	   			tDriverPatches sDriverPatches,
-	   			tBootLoaderPatches sBootLoaderPatches,
-                tWlanReadInteruptPin  sReadWlanInterruptPin,
-                tWlanInterruptEnable  sWlanInterruptEnable,
-                tWlanInterruptDisable sWlanInterruptDisable,
-                tWriteWlanPin         sWriteWlanPin)
+void wlan_init(	tWlanCB	 				sWlanCB,
+	   			tFWPatches				sFWPatches,
+	   			tDriverPatches			sDriverPatches,
+	   			tBootLoaderPatches		sBootLoaderPatches,
+                tWlanReadInteruptPin	sReadWlanInterruptPin,
+                tWlanInterruptEnable	sWlanInterruptEnable,
+                tWlanInterruptDisable	sWlanInterruptDisable,
+                tWriteWlanPin			sWriteWlanPin)
 {
 
 

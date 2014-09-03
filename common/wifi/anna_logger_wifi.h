@@ -7,8 +7,6 @@
 #include <wlan.h>
 #include <netapp.h>
 
-
 void wifi_init(void);
-
 
 #endif
