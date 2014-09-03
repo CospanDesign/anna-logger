@@ -145,9 +145,9 @@ HostFlowControlConsumeBuff(int sd)
  */
 
 int
-socket(long domain, long type, long protocol)
+socket(int16_t domain, int16_t type, int16_t protocol)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr, *args;
 
     ret = EFAIL;
@@ -194,10 +194,10 @@ socket(long domain, long type, long protocol)
  * \note
  * \warning
  */
-long
-closesocket(long sd)
+int16_t
+closesocket(int16_t sd)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr, *args;
 
     ret = EFAIL;
@@ -279,10 +279,10 @@ closesocket(long sd)
  * \note 
  * \warning
  */
-long
-accept(long sd, sockaddr *addr, socklen_t *addrlen)
+int16_t
+accept(int16_t sd, sockaddr *addr, socklen_t *addrlen)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr, *args;
     tBsdReturnParams tAcceptReturnArguments;
 
@@ -331,7 +331,7 @@ accept(long sd, sockaddr *addr, socklen_t *addrlen)
  * \brief assign a name to a socket
  *
  * This function gives the socket the local address addr.
- * addr is addrlen bytes long. Traditionally, this is called
+ * addr is addrlen bytes int16_t. Traditionally, this is called
  * When a socket is created with socket, it exists in a name
  * space (address family) but has no name assigned.
  * It is necessary to assign a local address before a SOCK_STREAM
@@ -355,10 +355,10 @@ accept(long sd, sockaddr *addr, socklen_t *addrlen)
  * \warning
  */
 
-long
-bind(long sd, const sockaddr *addr, long addrlen)
+int16_t
+bind(int16_t sd, const sockaddr *addr, int16_t addrlen)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr, *args;
 
     ret = EFAIL;
@@ -416,11 +416,11 @@ bind(long sd, const sockaddr *addr, long addrlen)
  * \warning
  */
 
-long
+int16_t
 
-listen(long sd, long backlog)
+listen(int16_t sd, int16_t backlog)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr, *args;
 
     ret = EFAIL;
@@ -505,7 +505,7 @@ gethostbyname(int8_t * hostname, uint16_t usNameLen, uint32_t* out_ip_addr)
     errno = ret.retVal;
     
 
-    (*((long*)out_ip_addr)) = ret.outputAddress;
+    (*((int16_t*)out_ip_addr)) = ret.outputAddress;
 
     return (errno);
 
@@ -549,10 +549,10 @@ gethostbyname(int8_t * hostname, uint16_t usNameLen, uint32_t* out_ip_addr)
  * \warning
  */
 
-long
-connect(long sd, const sockaddr *addr, long addrlen)
+int16_t
+connect(int16_t sd, const sockaddr *addr, int16_t addrlen)
 {
-    long int ret;
+    int16_t ret;
     uint8_t *ptr, *args;
 
     ret = EFAIL;
@@ -583,7 +583,7 @@ connect(long sd, const sockaddr *addr, long addrlen)
 	
     errno = ret;
 
-    return((long)ret);
+    return((int16_t)ret);
 }
 
 /**
@@ -628,7 +628,7 @@ connect(long sd, const sockaddr *addr, long addrlen)
  */
 
 int
-select(long nfds, socket_fd_set *readsds, socket_fd_set *writesds, socket_fd_set *exceptsds, 
+select(int16_t nfds, socket_fd_set *readsds, socket_fd_set *writesds, socket_fd_set *exceptsds, 
        struct timeval *timeout)
 {
     uint8_t *ptr, *args;
@@ -762,7 +762,7 @@ select(long nfds, socket_fd_set *readsds, socket_fd_set *writesds, socket_fd_set
  */
 #ifndef CC3000_TINY_DRIVER
 int
-setsockopt(long sd, long level, long optname, const void *optval, socklen_t optlen)
+setsockopt(int16_t sd, int16_t level, int16_t optname, const void *optval, socklen_t optlen)
 {
     int ret;
     uint8_t *ptr, *args;
@@ -848,7 +848,7 @@ setsockopt(long sd, long level, long optname, const void *optval, socklen_t optl
  */
 
 int
-getsockopt (long sd, long level, long optname, void *optval, socklen_t *optlen)
+getsockopt (int16_t sd, int16_t level, int16_t optname, void *optval, socklen_t *optlen)
 {
     uint8_t *ptr, *args;
 	tBsdGetSockOptReturnParams  tRetParams;
@@ -902,14 +902,14 @@ getsockopt (long sd, long level, long optname, void *optval, socklen_t *optlen)
 //!                  occurred
 //!
 //!  @brief          Return the length of the message on successful completion.
-//!                  If a message is too long to fit in the supplied buffer,
+//!                  If a message is too int16_t to fit in the supplied buffer,
 //!                  excess bytes may be discarded depending on the type of
 //!                  socket the message is received from
 //
 //*****************************************************************************
 int
-simple_link_recv(long sd, void *buf, long len, long flags, sockaddr *from,
-                socklen_t *fromlen, long opcode)
+simple_link_recv(int16_t sd, void *buf, int16_t len, int16_t flags, sockaddr *from,
+                socklen_t *fromlen, int16_t opcode)
 {
     uint8_t *ptr, *args;
 	tBsdReadReturnParams tSocketReadEvent;
@@ -973,7 +973,7 @@ simple_link_recv(long sd, void *buf, long len, long flags, sockaddr *from,
  */
 
 int
-recv(long sd, void *buf, long len, long flags)
+recv(int16_t sd, void *buf, int16_t len, int16_t flags)
 {
     return(simple_link_recv(sd, buf, len, flags, NULL, NULL, HCI_CMND_RECV));
 }
@@ -1011,7 +1011,7 @@ recv(long sd, void *buf, long len, long flags)
  */
 
 int
-recvfrom(long sd, void *buf, long len, long flags, sockaddr *from,
+recvfrom(int16_t sd, void *buf, int16_t len, int16_t flags, sockaddr *from,
          socklen_t *fromlen)
 {
     return(simple_link_recv(sd, buf, len, flags, from, fromlen,
@@ -1038,10 +1038,11 @@ recvfrom(long sd, void *buf, long len, long flags, sockaddr *from,
 //
 //*****************************************************************************
 int
-simple_link_send(long sd, const void *buf, long len, long flags,
-              const sockaddr *to, long tolen, long opcode)
+simple_link_send(int16_t sd, const void *buf, int16_t len, int16_t flags,
+              const sockaddr *to, int16_t tolen, int16_t opcode)
 {    
-    uint8_t uArgSize,  addrlen;
+    uint8_t uArgSize = 0;
+	uint8_t addrlen;
     uint8_t *ptr, *pDataPtr, *args;
     uint32_t addr_offset;
     int res;
@@ -1157,7 +1158,7 @@ simple_link_send(long sd, const void *buf, long len, long flags,
  */
 
 int
-send(long sd, const void *buf, long len, long flags)
+send(int16_t sd, const void *buf, int16_t len, int16_t flags)
 {
     return(simple_link_send(sd, buf, len, flags, NULL, 0, HCI_CMND_SEND));
 }
@@ -1194,7 +1195,7 @@ send(long sd, const void *buf, long len, long flags)
  */
 
 int
-sendto(long sd, const void *buf, long len, long flags, const sockaddr *to,
+sendto(int16_t sd, const void *buf, int16_t len, int16_t flags, const sockaddr *to,
        socklen_t tolen)
 {
     return(simple_link_send(sd, buf, len, flags, to, tolen, HCI_CMND_SENDTO));

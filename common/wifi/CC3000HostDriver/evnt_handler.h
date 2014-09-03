@@ -53,8 +53,8 @@ extern "C" {
 //
 //*****************************************************************************
 extern uint8_t *hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen);
-extern long hci_unsol_event_handler(int8_t *event_hdr);
-extern long hci_unsolicited_event_handler(void);
+extern int16_t hci_unsol_event_handler(int8_t *event_hdr);
+extern int16_t hci_unsolicited_event_handler(void);
 
 
 #define M_BSD_RESP_PARAMS_OFFSET(hci_event_hdr)((int8_t *)(hci_event_hdr) + HCI_EVENT_HEADER_SIZE)
@@ -69,13 +69,13 @@ extern long hci_unsolicited_event_handler(void);
 
 extern uint32_t socket_active_status;
 
-extern void set_socket_active_status(long Sd, long Status);
-extern long get_socket_active_status(long Sd);
+extern void set_socket_active_status(int16_t Sd, int16_t Status);
+extern int16_t get_socket_active_status(int16_t Sd);
 
 typedef struct _bsd_accept_return_t
 {
-    long             iSocketDescriptor;
-    long             iStatus;
+    int16_t             iSocketDescriptor;
+    int16_t             iStatus;
     sockaddr   		tSocketAddress;
     
 } tBsdReturnParams;
@@ -83,8 +83,8 @@ typedef struct _bsd_accept_return_t
 
 typedef struct _bsd_read_return_t
 {
-    long             iSocketDescriptor;
-    long             iNumberOfBytes;
+    int16_t             iSocketDescriptor;
+    int16_t             iNumberOfBytes;
     uint32_t	 uiFlags;
 } tBsdReadReturnParams;
 
@@ -94,7 +94,7 @@ typedef struct _bsd_read_return_t
 
 typedef struct _bsd_select_return_t
 {
-    long					iStatus;
+    int16_t					iStatus;
 	uint32_t 			uiRdfd;
 	uint32_t 			uiWrfd;
 	uint32_t 			uiExfd;
@@ -109,8 +109,8 @@ typedef struct _bsd_getsockopt_return_t
 
 typedef struct _bsd_gethostbyname_return_t
 {
-    long             retVal;
-    long             outputAddress;
+    int16_t             retVal;
+    int16_t             outputAddress;
 } tBsdGethostbynameParams;
 
 //*****************************************************************************

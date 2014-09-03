@@ -239,7 +239,7 @@ extern uint16_t hci_command_send(uint16_t usOpcode,
                                    uint8_t *ucArgs,
                                    uint8_t ucArgsLength);
  
-extern long hci_data_send(uint8_t ucOpcode,
+extern int16_t hci_data_send(uint8_t ucOpcode,
                                       uint8_t *ucArgs,
                                       uint16_t usArgsLength,
                                       uint16_t usDataLength,

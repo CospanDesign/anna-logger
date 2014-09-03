@@ -106,7 +106,7 @@ extern "C" {
  *
  *****************************************************************************/
 
-extern signed long nvmem_read(uint32_t file_id, uint32_t length, uint32_t offset, uint8_t *buff);
+extern int16_t nvmem_read(uint32_t file_id, uint32_t length, uint32_t offset, uint8_t *buff);
 
 
 

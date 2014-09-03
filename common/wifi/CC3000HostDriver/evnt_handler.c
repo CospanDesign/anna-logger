@@ -46,7 +46,7 @@
 #include "wlan.h"
 #include "socket.h"
 #include "netapp.h"
-#include "spi.h"
+#include "anna_logger_wifi_spi.h"
 
 
 uint32_t socket_active_status = SOCKET_STATUS_INIT_VAL;  
@@ -111,7 +111,7 @@ void hci_unsol_handle_patch_request(int8_t *event_hdr);
 // Prototypes for the static functions
 //
 //*****************************************************************************
-static long hci_event_unsol_flowcontrol_handler(int8_t *pEvent);
+static int16_t hci_event_unsol_flowcontrol_handler(int8_t *pEvent);
 
 
 static void update_socket_active_status(int8_t *resp_params);
@@ -470,11 +470,11 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 //!  @brief              This function is Network Application events handler.
 //
 //*****************************************************************************
-long
+int16_t
 hci_unsol_event_handler(int8_t *event_hdr)
 {
     int8_t * data = NULL;
-    long event_type;
+    unsigned long event_type;
 
 	STREAM_TO_UINT16(event_hdr, HCI_EVENT_OPCODE_OFFSET,event_type);
 	
@@ -523,15 +523,15 @@ hci_unsol_event_handler(int8_t *event_hdr)
 				data = (int8_t*)(event_hdr) + HCI_EVENT_HEADER_SIZE;
 				/*
 
-				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_IP_OFFSET, *(long *)params.aucIP);
+				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_IP_OFFSET, *(int16_t *)params.aucIP);
 				
-				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_SUBNET_OFFSET, *(long *)params.aucSubnetMask);
+				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_SUBNET_OFFSET, *(int16_t *)params.aucSubnetMask);
 				
-				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_GW_OFFSET, *(long *)params.aucDefaultGateway);
+				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_GW_OFFSET, *(int16_t *)params.aucDefaultGateway);
 				
-				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_DHCP_OFFSET, *(long *)params.aucDHCPServer);
+				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_DHCP_OFFSET, *(int16_t *)params.aucDHCPServer);
 
-				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_DNS_OFFSET, *(long *)params.aucDNSServer);
+				STREAM_TO_UINT32(data, NETAPP_IPCONFIG_DNS_OFFSET, *(int16_t *)params.aucDNSServer);
 				*/
 
 				//Read IP address
@@ -613,7 +613,7 @@ hci_unsol_event_handler(int8_t *event_hdr)
 //!                  event handler from global array of handlers pointers
 //
 //*****************************************************************************
-long
+int16_t
 hci_unsolicited_event_handler(void)
 {
 	uint32_t   res = 0;
@@ -646,7 +646,7 @@ hci_unsolicited_event_handler(void)
 	return res;
 }
 
-void set_socket_active_status(long Sd, long Status)
+void set_socket_active_status(int16_t Sd, int16_t Status)
 {
     if(M_IS_VALID_SD(Sd) && M_IS_VALID_STATUS(Status))
     {
@@ -667,11 +667,11 @@ void set_socket_active_status(long Sd, long Status)
 //!  \brief
 //
 //*****************************************************************************
-long
+int16_t
 hci_event_unsol_flowcontrol_handler(int8_t *pEvent)
 {
     
-    long temp, value;
+    int16_t temp, value;
      uint16_t i;
      uint16_t  pusNumberOfHandles=0;
     int8_t *pReadPayload;
@@ -701,8 +701,8 @@ hci_event_unsol_flowcontrol_handler(int8_t *pEvent)
 
 
 
-long
-get_socket_active_status(long Sd)
+int16_t
+get_socket_active_status(int16_t Sd)
 {
     if(M_IS_VALID_SD(Sd))
     {
@@ -714,7 +714,7 @@ get_socket_active_status(long Sd)
 void
 update_socket_active_status(int8_t *resp_params)
 {
-	long status, sd;
+	int16_t status, sd;
 
 	STREAM_TO_UINT32(resp_params, BSD_RSP_PARAMS_SOCKET_OFFSET,sd);
 	STREAM_TO_UINT32(resp_params, BSD_RSP_PARAMS_STATUS_OFFSET,status);

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "lwip_http_server", "examples\lwip_http_server\lwip_http_server.cproj", "{4D8B682F-87DC-4D2F-9C17-5319796A4E00}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -15,10 +13,6 @@ Global
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.Build.0 = Release|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.ActiveCfg = Debug|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Debug|ARM.Build.0 = Debug|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.ActiveCfg = Release|ARM
-		{4D8B682F-87DC-4D2F-9C17-5319796A4E00}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,10 +27,13 @@
 #include <asf.h>
 #include <port.h>
 #include "sd_mmc_mem.h"
-#include "anna_logger_wifi.h"
+#include <anna_logger_wifi.h>
+
+
+#include <cc3000_common.h>
 
 uint32_t main_counter;
-char main_string[] = "Main task iteration: 0x00000000\r\n";
+//char main_string[] = "Main task iteration: 0x00000000\r\n";
 
 //#define DBG_PRINT_STR(NAME, STR) dbg_print_str("#NAME: " #STR)
 

@@ -42,7 +42,7 @@
 #include <string.h>
 #include "wlan.h"
 #include "hci.h"
-#include "spi.h"
+#include "anna_logger_wifi_spi.h"
 #include "socket.h"
 #include "evnt_handler.h"
 #include "os.h"
@@ -364,11 +364,11 @@ wlan_stop(void)
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long
-wlan_connect(uint32_t ulSecType, int8_t *ssid, long ssid_len,
-             uint8_t *bssid, uint8_t *key, long key_len)
+int16_t
+wlan_connect(uint32_t ulSecType, int8_t *ssid, int16_t ssid_len,
+             uint8_t *bssid, uint8_t *key, int16_t key_len)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 	uint8_t bssid_zero[] = {0, 0, 0, 0, 0, 0};
@@ -420,10 +420,10 @@ wlan_connect(uint32_t ulSecType, int8_t *ssid, long ssid_len,
     return(ret);
 }
 #else
-long
-wlan_connect(int8_t *ssid, long ssid_len)
+int16_t
+wlan_connect(int8_t *ssid, int16_t ssid_len)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 	uint8_t bssid_zero[] = {0, 0, 0, 0, 0, 0};
@@ -475,10 +475,10 @@ wlan_connect(int8_t *ssid, long ssid_len)
  * \note        
  * \warning     
  */
-long
+int16_t
 wlan_disconnect()
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
 
     ret = EFAIL;
@@ -530,12 +530,12 @@ wlan_disconnect()
  * \warning     
  */
 
-long
+int16_t
 wlan_ioctl_set_connection_policy(uint32_t should_connect_to_open_ap, 
                                  uint32_t ulShouldUseFastConnect,
                                  uint32_t ulUseProfiles)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 
@@ -599,7 +599,7 @@ wlan_ioctl_set_connection_policy(uint32_t should_connect_to_open_ap,
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long
+int16_t
 wlan_add_profile(uint32_t ulSecType, 
 										uint8_t* ucSsid,
 										uint32_t ulSsidLen, 
@@ -611,10 +611,10 @@ wlan_add_profile(uint32_t ulSecType,
                                         uint8_t* ucPf_OrKey,
                                         uint32_t ulPassPhraseLen)
 {
-    uint16_t arg_len;
-    long ret;
+    uint16_t arg_len = 0;
+    int16_t ret;
     uint8_t *ptr;
-    long i = 0;
+    uint16_t i = 0;
 	uint8_t *args;
 	uint8_t bssid_zero[] = {0, 0, 0, 0, 0, 0};
 	
@@ -740,10 +740,10 @@ wlan_add_profile(uint32_t ulSecType,
  * \note        
  * \warning     
  */
-long
+int16_t
 wlan_ioctl_del_profile(uint32_t ulIndex)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 
@@ -802,7 +802,7 @@ wlan_ioctl_del_profile(uint32_t ulIndex)
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long
+int16_t
 wlan_ioctl_get_scan_results(uint32_t ulScanTimeout,
                             uint8_t *ucResults)
 {
@@ -874,10 +874,10 @@ wlan_ioctl_get_scan_results(uint32_t ulScanTimeout,
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long
+int16_t
 wlan_ioctl_set_scan_params(uint32_t uiEnable, uint32_t uiMinDwellTime,uint32_t uiMaxDwellTime,
 										   uint32_t uiNumOfProbeResponces,uint32_t uiChannelMask,
-										   long iRSSIThreshold,uint32_t uiSNRThreshold,
+										   int16_t iRSSIThreshold,uint32_t uiSNRThreshold,
 										   uint32_t uiDefaultTxPower, uint32_t *aiIntervalList)
 {
     uint32_t  uiRes;
@@ -940,10 +940,10 @@ wlan_ioctl_set_scan_params(uint32_t uiEnable, uint32_t uiMinDwellTime,uint32_t u
  * \warning     
  */
 
-long
+int16_t
 wlan_set_event_mask(uint32_t ulMask)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 
@@ -1006,10 +1006,10 @@ wlan_set_event_mask(uint32_t ulMask)
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long
+int16_t
 wlan_ioctl_statusget(void)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
 
     ret = EFAIL;
@@ -1043,10 +1043,10 @@ wlan_ioctl_statusget(void)
  * \note    An asynchnous event - First Time Config Done will be generated as soon as the process finishes successfully
  * \warning     
  */
-long
+int16_t
 wlan_first_time_config_start(void)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
 
     ret = EFAIL;
@@ -1076,10 +1076,10 @@ wlan_first_time_config_start(void)
  * \note      
  * \warning     
  */
-long
+int16_t
 wlan_first_time_config_stop(void)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
 
     ret = EFAIL;
@@ -1113,10 +1113,10 @@ wlan_first_time_config_stop(void)
  * \warning     
  */
 
-long
+int16_t
 wlan_first_time_config_set_prefix(int8_t* cNewPrefix)
 {
-    long ret;
+    int16_t ret;
     uint8_t *ptr;
     uint8_t *args;
 

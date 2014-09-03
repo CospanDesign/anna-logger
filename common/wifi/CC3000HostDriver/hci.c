@@ -42,9 +42,10 @@
 
 #include "cc3000_common.h"
 #include "hci.h"
-#include "spi.h"
+#include "anna_logger_wifi_spi.h"
 #include "evnt_handler.h"
 #include "wlan.h"
+#include <string.h>
 
 #define SL_PATCH_PORTION_SIZE		(1000)
 
@@ -96,7 +97,7 @@ hci_command_send(uint16_t usOpcode, uint8_t *pucBuff,
 //!  \brief              Initiate an HCI data write operation
 //
 //*****************************************************************************
-long
+int16_t
 hci_data_send(uint8_t ucOpcode, 
                            uint8_t *ucArgs,
                            uint16_t usArgsLength, 

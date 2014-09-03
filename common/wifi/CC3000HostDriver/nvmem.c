@@ -81,7 +81,7 @@
  * \warning
  *
  *****************************************************************************/
-signed long 
+int16_t 
 nvmem_read(uint32_t ulFileId, uint32_t ulLength, uint32_t ulOffset, uint8_t *buff)
 {
     uint8_t ucStatus = 0xFF;
@@ -147,11 +147,11 @@ nvmem_read(uint32_t ulFileId, uint32_t ulLength, uint32_t ulOffset, uint8_t *buf
  * \warning
  *
  *****************************************************************************/
-signed long 
+int16_t 
 nvmem_write(uint32_t ulFileId, uint32_t ulLength, uint32_t ulEntryOffset, 
             uint8_t *buff)
 {
-    long iRes;
+    int16_t iRes;
     uint8_t *ptr;
     uint8_t *args;
     
@@ -227,7 +227,7 @@ uint8_t nvmem_get_mac_address(uint8_t *mac)
  *  
  * program a patch to a specific file ID. 
  * The SP data is assumed to be organized in 2-dimentional.
- * Each line is 150 bytes long.
+ * Each line is 150 bytes int16_t.
  * Actual programming is applied in 150 bytes portions (SP_PORTION_SIZE).
  *  
  * \param[in] ulFileId   nvmem file id:\n

@@ -102,7 +102,7 @@ typedef struct _netapp_pingreport_args
  * \warning     
  */
 
-extern long  netapp_config_mac_adrress( uint8_t *mac );
+extern int16_t  netapp_config_mac_adrress( uint8_t *mac );
 
 
 
@@ -136,7 +136,7 @@ extern long  netapp_config_mac_adrress( uint8_t *mac );
  * is generated only upon a connection to the AP was established\n
  * \warning     
  */
-extern 	long netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucDefaultGateway, uint32_t *aucDNSServer);
+extern 	int16_t netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucDefaultGateway, uint32_t *aucDNSServer);
 
 /**
  * \brief send ICMP ECHO_REQUEST to network hosts 
@@ -162,7 +162,7 @@ extern 	long netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucD
  * will stop the previous ping request.
  */
  #ifndef CC3000_TINY_DRIVER
-extern long netapp_ping_send(uint32_t *ip, uint32_t ulPingAttempts, uint32_t ulPingSize, uint32_t ulPingTimeout);
+extern int16_t netapp_ping_send(uint32_t *ip, uint32_t ulPingAttempts, uint32_t ulPingSize, uint32_t ulPingTimeout);
 #endif
 /**
  * \brief Request for ping status. This API triggers the CC3000 
@@ -199,7 +199,7 @@ void netapp_ping_report();
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long netapp_ping_stop();
+extern int16_t netapp_ping_stop();
 #endif
 
 /**
@@ -243,7 +243,7 @@ void netapp_ipconfig( tNetappIpconfigRetArgs * ipconfig );
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long netapp_arp_flush();
+int16_t netapp_arp_flush();
 #endif
 
 /**
@@ -292,7 +292,7 @@ long netapp_arp_flush();
  * \warning     
  */
  #ifndef CC3000_TINY_DRIVER
-extern long netapp_timeout_values(uint32_t *aucDHCP, uint32_t *aucARP,uint32_t *aucKeepalive,	uint32_t *aucInactivity);
+extern int16_t netapp_timeout_values(uint32_t *aucDHCP, uint32_t *aucARP,uint32_t *aucKeepalive,	uint32_t *aucInactivity);
 #endif
 
 

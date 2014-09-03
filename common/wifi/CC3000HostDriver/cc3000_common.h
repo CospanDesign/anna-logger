@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdint.h>
-#include <anna_logger_wifi.h>
+
 
 //*****************************************************************************
 //
@@ -83,7 +83,7 @@ extern "C" {
 //
 // This buffer is used for receiving events and data.
 // Note that the maximal buffer size as defined here is a maximal at all 
-// The packet can not be longer than MTU size and CC3000 does not support 
+// The packet can not be int16_ter than MTU size and CC3000 does not support 
 // fragmentation.Note that the same buffer is used for reception of the data and
 // events from CC3000. That is why the minium is defined. 
 // The calculation for the actual size of buffer for reception is:
@@ -98,7 +98,7 @@ extern "C" {
 //Defines for minimal and maximal TX buffer size.
 // This buffer is used for sending events and data.
 // Note that the maximal buffer size as defined here is a maximal at all 
-// The packet can not be longer than MTU size and CC3000 does not support 
+// The packet can not be int16_ter than MTU size and CC3000 does not support 
 // fragmentation.Note that the same buffer is used for tranmission of the data and
 // commnads. That is why the minium is defined. 
 // The calculation for the actual size of buffer for transmission is:
@@ -131,9 +131,9 @@ extern "C" {
 //*****************************************************************************
 //                  Compound Types
 //*****************************************************************************
-typedef long time_t;
+typedef signed long time_t;
 typedef uint32_t clock_t;
-typedef long suseconds_t;
+typedef signed long suseconds_t;
 
 typedef struct timeval timeval;
 
@@ -149,9 +149,9 @@ typedef int8_t *(*tDriverPatches)(uint32_t *usLength);
 
 typedef int8_t *(*tBootLoaderPatches)(uint32_t *usLength);
 
-typedef void (*tWlanCB)(long event_type, int8_t * data, uint8_t length );
+typedef void (*tWlanCB)(int16_t event_type, int8_t * data, uint8_t length );
 
-typedef long (*tWlanReadInteruptPin)(void);
+typedef int16_t (*tWlanReadInteruptPin)(void);
 
 typedef void (*tWlanInterruptEnable)(void);
 
@@ -175,7 +175,7 @@ typedef struct
     tWlanInterruptDisable WlanInterruptDisable;
     tWriteWlanPin         WriteWlanPin;
 
-	signed long		 slTransmitDataError;
+	int16_t		 slTransmitDataError;
 	uint16_t	 usNumberOfFreeBuffers;
 	uint16_t	 usSlBufferLength;
 	uint16_t	 usBufferSize;
@@ -245,14 +245,14 @@ extern uint32_t STREAM_TO_UINT32_f(int8_t* p, uint16_t offset);
 //This macro is used for copying 32 bit to stream while converting to little endian format.
 #define UINT32_TO_STREAM(_p, _u32)	(UINT32_TO_STREAM_f(_p, _u32))
 //This macro is used for copying a specified value length bits (l) to stream while converting to little endian format.
-#define ARRAY_TO_STREAM(p, a, l) 	{register int16_t _i; for (_i = 0; _i < l; _i++) *(p)++ = ((uint8_t *) a)[_i];}
+#define ARRAY_TO_STREAM(p, a, l) 	{register uint16_t _i; for (_i = 0; _i < l; _i++) *(p)++ = ((uint8_t *) a)[_i];}
 //This macro is used for copying received stream to 8 bit in little endian format.
 #define STREAM_TO_UINT8(_p, _offset, _u8)	{_u8 = (uint8_t)(*(_p + _offset));}
 //This macro is used for copying received stream to 16 bit in little endian format.
 #define STREAM_TO_UINT16(_p, _offset, _u16)	{_u16 = STREAM_TO_UINT16_f(_p, _offset);}
 //This macro is used for copying received stream to 32 bit in little endian format.
 #define STREAM_TO_UINT32(_p, _offset, _u32)	{_u32 = STREAM_TO_UINT32_f(_p, _offset);}
-#define STREAM_TO_STREAM(p, a, l) 	{register int16_t _i; for (_i = 0; _i < l; _i++) *(a)++ = (uint8_t) p[_i];}
+#define STREAM_TO_STREAM(p, a, l) 	{register uint16_t _i; for (_i = 0; _i < l; _i++) *(a)++ = (uint8_t) p[_i];}
 
 
 void __error__(int8_t *pcFilename, uint32_t ulLine);

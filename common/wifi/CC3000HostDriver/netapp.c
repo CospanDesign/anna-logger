@@ -69,7 +69,7 @@
  * \warning     
  */
 
-long netapp_config_mac_adrress(uint8_t * mac)
+int16_t netapp_config_mac_adrress(uint8_t * mac)
 {
    return  nvmem_set_mac_address(mac);
 }
@@ -105,7 +105,7 @@ long netapp_config_mac_adrress(uint8_t * mac)
  * is generated only upon a connection to the AP was established\n
  * \warning     
  */
-long netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucDefaultGateway, uint32_t *aucDNSServer)
+int16_t netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucDefaultGateway, uint32_t *aucDNSServer)
 {
     int8_t scRet;
     uint8_t *ptr;
@@ -185,7 +185,7 @@ long netapp_dhcp(uint32_t *aucIP, uint32_t *aucSubnetMask,uint32_t *aucDefaultGa
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long 
+int16_t 
 netapp_timeout_values(uint32_t *aucDHCP, uint32_t *aucARP,uint32_t *aucKeepalive,	uint32_t *aucInactivity)
 {
     int8_t scRet;
@@ -251,7 +251,7 @@ netapp_timeout_values(uint32_t *aucDHCP, uint32_t *aucARP,uint32_t *aucKeepalive
  * will stop the previous ping request.
  */
 #ifndef CC3000_TINY_DRIVER
-long
+int16_t
 netapp_ping_send(uint32_t *ip, uint32_t ulPingAttempts, uint32_t ulPingSize, uint32_t ulPingTimeout)
 {
     int8_t scRet;
@@ -334,7 +334,7 @@ void netapp_ping_report()
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long netapp_ping_stop()
+int16_t netapp_ping_stop()
 {
     int8_t scRet;
     uint8_t *ptr;
@@ -414,7 +414,7 @@ void netapp_ipconfig( tNetappIpconfigRetArgs * ipconfig )
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-long netapp_arp_flush(void)
+int16_t netapp_arp_flush(void)
 {
 	int8_t scRet;
     uint8_t *ptr;

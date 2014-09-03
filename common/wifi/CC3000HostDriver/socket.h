@@ -131,8 +131,8 @@ typedef struct _sockaddr_in_t
 
 typedef uint32_t socklen_t;
 
-// The fd_set member is required to be an array of longs.
-typedef long int __fd_mask;
+// The fd_set member is required to be an array of int16_ts.
+typedef signed long int __fd_mask;
 
 // It's easier to assume 8-bit bytes than to get CHAR_BIT.
 #define __NFDBITS               (8 * sizeof (__fd_mask))
@@ -210,7 +210,7 @@ typedef struct
  */
 
 
-extern int socket(long domain, long type, long protocol);
+extern int socket(int16_t domain, int16_t type, int16_t protocol);
 
 /**
  * \brief gracefully close socket
@@ -226,7 +226,7 @@ extern int socket(long domain, long type, long protocol);
  * \note
  * \warning
  */
-extern long closesocket(long sd);
+extern int16_t closesocket(int16_t sd);
 
 /**
  * \brief accept a connection on a socket
@@ -280,13 +280,13 @@ extern long closesocket(long sd);
  * \note 
  * \warning
  */
-extern long accept(long sd, sockaddr *addr, socklen_t *addrlen);
+extern int16_t accept(int16_t sd, sockaddr *addr, socklen_t *addrlen);
 
 /**
  * \brief assign a name to a socket
  *
  * This function gives the socket the local address addr.
- * addr is addrlen bytes long. Traditionally, this is called
+ * addr is addrlen bytes int16_t. Traditionally, this is called
  * When a socket is created with socket, it exists in a name
  * space (address family) but has no name assigned.
  * It is necessary to assign a local address before a SOCK_STREAM
@@ -309,7 +309,7 @@ extern long accept(long sd, sockaddr *addr, socklen_t *addrlen);
  * \note
  * \warning
  */
-extern long bind(long sd, const sockaddr *addr, long addrlen);
+extern int16_t bind(int16_t sd, const sockaddr *addr, int16_t addrlen);
 
 /**
  * \brief listen for connections on a socket
@@ -332,7 +332,7 @@ extern long bind(long sd, const sockaddr *addr, long addrlen);
  * \note On this version, backlog is not supported
  * \warning
  */
-extern long listen(long sd, long backlog);
+extern int16_t listen(int16_t sd, int16_t backlog);
 
 
 /**
@@ -372,7 +372,7 @@ extern long listen(long sd, long backlog);
  * \note
  * \warning
  */
-extern long connect(long sd, const sockaddr *addr, long addrlen);
+extern int16_t connect(int16_t sd, const sockaddr *addr, int16_t addrlen);
 
 /**
  * \brief Monitor socket activity
@@ -414,7 +414,7 @@ extern long connect(long sd, const sockaddr *addr, long addrlen);
  *  
  * \warning
  */
-extern int select(long nfds, socket_fd_set *readsds, socket_fd_set *writesds,
+extern int select(int16_t nfds, socket_fd_set *readsds, socket_fd_set *writesds,
                   socket_fd_set *exceptsds, struct timeval *timeout);
 
 /**
@@ -462,7 +462,7 @@ extern int select(long nfds, socket_fd_set *readsds, socket_fd_set *writesds,
  * \warning
  */
 #ifndef CC3000_TINY_DRIVER 
-extern int setsockopt(long sd, long level, long optname, const void *optval,
+extern int setsockopt(int16_t sd, int16_t level, int16_t optname, const void *optval,
                       socklen_t optlen);
 #endif
 /**
@@ -510,7 +510,7 @@ extern int setsockopt(long sd, long level, long optname, const void *optval,
  *        
  * \warning
  */
-extern int getsockopt(long sd, long level, long optname, void *optval,
+extern int getsockopt(int16_t sd, int16_t level, int16_t optname, void *optval,
                       socklen_t *optlen);
 
 /**
@@ -534,7 +534,7 @@ extern int getsockopt(long sd, long level, long optname, void *optval,
  * \note   On this version, only blocking mode is supported.
  * \warning
  */
-extern int recv(long sd, void *buf, long len, long flags);
+extern int recv(int16_t sd, void *buf, int16_t len, int16_t flags);
 
 /**
  * \brief read data from socket
@@ -568,7 +568,7 @@ extern int recv(long sd, void *buf, long len, long flags);
  * \note   On this version, only blocking mode is supported.
  * \warning
  */
-extern int recvfrom(long sd, void *buf, long len, long flags, sockaddr *from, 
+extern int recvfrom(int16_t sd, void *buf, int16_t len, int16_t flags, sockaddr *from, 
                     socklen_t *fromlen);
 
 /**
@@ -593,7 +593,7 @@ extern int recvfrom(long sd, void *buf, long len, long flags, sockaddr *from,
  * \warning   
  */
 
-extern int send(long sd, const void *buf, long len, long flags);
+extern int send(int16_t sd, const void *buf, int16_t len, int16_t flags);
 
 /**
  * \brief write data to socket
@@ -626,7 +626,7 @@ extern int send(long sd, const void *buf, long len, long flags);
  * \warning
  */
 
-extern int sendto(long sd, const void *buf, long len, long flags, 
+extern int sendto(int16_t sd, const void *buf, int16_t len, int16_t flags, 
                   const sockaddr *to, socklen_t tolen);
 
 
