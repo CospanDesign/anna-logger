@@ -48,15 +48,19 @@ void spi_transfer(void * data_out, uint16_t data_out_length, void * data_in, uin
 */
 
 
-void SpiClose(void);
-void SpiOpen(gcSpiHandleRx pfRxHandler);
-int16_t SpiWrite(uint8_t *data_out, uint16_t length);
-int16_t SpiRead(uint8_t *data_in, uint16_t length);
-void SpiPauseSpi(void);
-void SpiResumeSpi(void);
-int16_t ReadWlanInterruptPin(void);
-void WlanInterruptEnable(void);
-void WlanInterruptDisable(void);
-void WriteWlanPin(uint8_t val);
+extern void SpiClose(void);
+extern void SpiOpen(gcSpiHandleRx pfRxHandler);
+extern int16_t SpiWrite(uint8_t *data_out, uint16_t length);
+extern int16_t SpiRead(uint8_t *data_in, uint16_t length);
+extern void SpiPauseSpi(void);
+extern void SpiResumeSpi(void);
+extern int16_t ReadWlanInterruptPin(void);
+extern void WlanInterruptEnable(void);
+extern void WlanInterruptDisable(void);
+extern void WriteWlanPin(uint8_t val);
+
+uint8_t * sendDrivePatch(uint32_t *length);
+uint8_t * sendBootLoaderPatch(uint32_t *length);
+uint8_t * sendWLFWPatch(uint32_t *length);
 
 #endif

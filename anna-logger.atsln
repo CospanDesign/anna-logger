@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "external_interrupt_test", "examples\external_interrupt_test\external_interrupt_test.cproj", "{F982D3A6-E0BE-4595-9981-045F882FF45D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -15,10 +13,6 @@ Global
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.Build.0 = Release|ARM
-		{F982D3A6-E0BE-4595-9981-045F882FF45D}.Debug|ARM.ActiveCfg = Debug|ARM
-		{F982D3A6-E0BE-4595-9981-045F882FF45D}.Debug|ARM.Build.0 = Debug|ARM
-		{F982D3A6-E0BE-4595-9981-045F882FF45D}.Release|ARM.ActiveCfg = Release|ARM
-		{F982D3A6-E0BE-4595-9981-045F882FF45D}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

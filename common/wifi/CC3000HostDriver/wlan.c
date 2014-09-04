@@ -81,6 +81,7 @@ sSimplLinkInformation tSLInformation;
 #define WLAN_ADD_PROFILE_WEP_PARAM_LEN			(36)
 #define WLAN_ADD_PROFILE_WPA_PARAM_LEN			(44)
 #define WLAN_CONNECT_PARAM_LEN					(29)
+#define WLAN_SMART_CONFIG_START_PARAMS_LEN		(4)
 
 
 

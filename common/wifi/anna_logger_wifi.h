@@ -2,13 +2,51 @@
 #define __ANNA_LOGGER_WIFI__
 
 
+#include <stdbool.h>
 #include "anna_logger_wifi_spi.h"
 #include "CC3000HostDriver/cc3000_common.h"
+#include <socket.h>
 #include <wlan.h>
 #include <netapp.h>
-#include <stdbool.h>
 
-void wifi_init(void);
+
+
+
+typedef struct Result_Struct{
+	uint32_t  num_networks;
+	uint32_t  scan_status;
+	uint8_t   rssiByte;
+	uint8_t   Sec_ssidLen;
+	uint16_t  time;
+	uint8_t   ssid_name[32];
+	uint8_t   bssid[6];
+} ResultStruct_t;   /**!ResultStruct_t : data struct to store SSID scan results */
+
+/* Enum for wlan_ioctl_statusget results */
+typedef enum {
+	STATUS_DISCONNECTED = 0,
+	STATUS_SCANNING     = 1,
+	STATUS_CONNECTING   = 2,
+	STATUS_CONNECTED    = 3
+} status_t;
+
+#define WLAN_CONNECT_TIMEOUT 10000
+//#define RXBUFFERSIZE 64
+//#define TXBUFFERSIZE 32
+
+typedef struct _anna_logger_wifi_client_t anna_logger_wifi_client_t;
+typedef struct _anna_logger_wifi_server_t anna_logger_wifi_server_t;
+
+struct _anna_logger_wifi_client_t {
+};
+struct _anna_logger_wifi_server_t {
+};
+
+
+bool wifi_init(uint8_t patch_request, bool use_smart_config_data, const char *device_name);
+
+bool setup_anna_logger_wifi_client(anna_logger_wifi_client_t * client, int32_t tcp_socket, sockaddr * addr, uint32_t socketaddr_size);
+bool setup_anna_logger_wifi_server(anna_logger_wifi_client_t * client, int32_t tcp_socket, sockaddr * addr, uint32_t socketaddr_size);
 
 void reboot(bool patch_request);
 void stop(void);
@@ -32,9 +70,11 @@ bool get_ip_address(uint32_t *retip, uint32_t *netmask, uint32_t *gateway, uint3
 
 //CC33000
 bool check_smart_config_finished(void);
+int32_t wlan_smart_config_set_prefix(char * prefix);
+int32_t wlan_smart_config_process();
 
-void * connect_tcp(uint32_t dest_ip, uint16_t dest_port);
-void * connect_udp(uint32_t dest_ip, uint16_t dest_port);
+bool connect_tcp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t dest_port);
+bool connect_udp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t dest_port);
 
 
 #ifndef CC3000_TINY_DRIVER

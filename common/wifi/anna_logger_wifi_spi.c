@@ -201,7 +201,23 @@ void WlanInterruptDisable(void){
 	extint_chan_disable_callback(WIFI_IRQ_CHANNEL,
 	EXTINT_CALLBACK_DETECT);
 }
+
 void WriteWlanPin(uint8_t val){
 	//port_pin_set_output_level()
 	
+}
+
+int8_t * sendDrivePatch(uint32_t *length){
+	*length = 0;
+	return NULL;
+}
+
+int8_t * sendBootLoaderPatch(uint32_t *length){
+	*length = 0;
+	return NULL;
+}
+
+int8_t * sendWLFWPatch(uint32_t *length){
+	*length = 0;
+	return NULL;	
 }
