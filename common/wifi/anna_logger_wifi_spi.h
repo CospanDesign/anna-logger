@@ -41,8 +41,8 @@ extern spi_information_t spi_information;
 
 //uint8_t wlan_tx_buffer[];
 //uint8_t wlan_rx_buffer[];
-/*
 void spi_wifi_init(void);
+/*
 uint8_t spi_transfer_byte(uint8_t data_out);
 void spi_transfer(void * data_out, uint16_t data_out_length, void * data_in, uint16_t data_in_length);
 */
