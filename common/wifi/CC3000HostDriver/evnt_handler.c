@@ -228,20 +228,20 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 				//
 				// Event Received
 				//
-				STREAM_TO_UINT16((int8_t *)pucReceivedData, HCI_EVENT_OPCODE_OFFSET,usReceivedEventOpcode);
+				STREAM_TO_uint16_t((int8_t *)pucReceivedData, HCI_EVENT_OPCODE_OFFSET,usReceivedEventOpcode);
 				pucReceivedParams = pucReceivedData + HCI_EVENT_HEADER_SIZE;
 				//
 				// In case unsolicited event received - here the handling finished
 				//
 				if (hci_unsol_event_handler((int8_t *)pucReceivedData) == 0)
 				{
-					STREAM_TO_UINT8(pucReceivedData, HCI_DATA_LENGTH_OFFSET, usLength);
+					STREAM_TO_uint8_t(pucReceivedData, HCI_DATA_LENGTH_OFFSET, usLength);
 					switch(usReceivedEventOpcode)
 				    {		
 				    	case HCI_CMND_READ_BUFFER_SIZE:
 						{
-							STREAM_TO_UINT8((int8_t *)pucReceivedParams, 0, tSLInformation.usNumberOfFreeBuffers);
-							STREAM_TO_UINT16((int8_t *)pucReceivedParams, 1, tSLInformation.usSlBufferLength);
+							STREAM_TO_uint8_t((int8_t *)pucReceivedParams, 0, tSLInformation.usNumberOfFreeBuffers);
+							STREAM_TO_uint16_t((int8_t *)pucReceivedParams, 1, tSLInformation.usSlBufferLength);
 				    	}
 						break;
 
@@ -256,7 +256,7 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 				        case HCI_EVNT_NVMEM_CREATE_ENTRY:
 						case HCI_CMND_NVMEM_WRITE_PATCH:
 						 case HCI_NETAPP_PING_REPORT:
-							STREAM_TO_UINT8(pucReceivedData, HCI_EVENT_STATUS_OFFSET,*(uint8_t *)pRetParams);
+							STREAM_TO_uint8_t(pucReceivedData, HCI_EVENT_STATUS_OFFSET,*(uint8_t *)pRetParams);
 							break;
 							
 						case HCI_CMND_SETSOCKOPT:
@@ -281,7 +281,7 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,0,*(uint32_t *)pRetParams);
 							break;
 						case HCI_EVNT_READ_SP_VERSION:
-							STREAM_TO_UINT8(pucReceivedData, HCI_EVENT_STATUS_OFFSET,*(uint8_t *)pRetParams);
+							STREAM_TO_uint8_t(pucReceivedData, HCI_EVENT_STATUS_OFFSET,*(uint8_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 1;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams, 0, retValue32);
 							UINT32_TO_STREAM((uint8_t *)pRetParams, retValue32);
@@ -339,7 +339,7 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 				        }
 
 						case HCI_CMND_GETSOCKOPT:
-							STREAM_TO_UINT8(pucReceivedData, HCI_EVENT_STATUS_OFFSET,((tBsdGetSockOptReturnParams *)pRetParams)->iStatus);
+							STREAM_TO_uint8_t(pucReceivedData, HCI_EVENT_STATUS_OFFSET,((tBsdGetSockOptReturnParams *)pRetParams)->iStatus);
 							//This argurment returns in network order, therefore the use of memcpy.  
 							memcpy((uint8_t *)pRetParams, pucReceivedParams, 4);
 							break;
@@ -351,10 +351,10 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_SCANRESULT_STATUS_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;                                                        
 
-                            STREAM_TO_UINT16((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_ISVALID_TO_SSIDLEN_OFFSET,*(uint32_t *)pRetParams);
+                            STREAM_TO_uint16_t((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_ISVALID_TO_SSIDLEN_OFFSET,*(uint32_t *)pRetParams);
                             pRetParams = ((int8_t *)pRetParams) + 2;   
 
-                            STREAM_TO_UINT16((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_FRAME_TIME_OFFSET,*(uint32_t *)pRetParams);
+                            STREAM_TO_uint16_t((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_FRAME_TIME_OFFSET,*(uint32_t *)pRetParams);
                             pRetParams = ((int8_t *)pRetParams) + 2;  
  
                             memcpy((uint8_t *)pRetParams, (int8_t *)(pucReceivedParams + GET_SCAN_RESULTS_FRAME_TIME_OFFSET + 2), GET_SCAN_RESULTS_SSID_MAC_LENGTH);
@@ -405,9 +405,9 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 			{
                         
                 pucReceivedParams = pucReceivedData;
-                STREAM_TO_UINT8((int8_t *)pucReceivedData, HCI_PACKET_ARGSIZE_OFFSET, ucArgsize);
+                STREAM_TO_uint8_t((int8_t *)pucReceivedData, HCI_PACKET_ARGSIZE_OFFSET, ucArgsize);
                                 
-				STREAM_TO_UINT16((int8_t *)pucReceivedData, HCI_PACKET_LENGTH_OFFSET, usLength);
+				STREAM_TO_uint16_t((int8_t *)pucReceivedData, HCI_PACKET_LENGTH_OFFSET, usLength);
 				
 				//
 				// Data received: note that the only case where from and from length are not null is in 
@@ -476,7 +476,7 @@ hci_unsol_event_handler(int8_t *event_hdr)
     int8_t * data = NULL;
     unsigned long event_type;
 
-	STREAM_TO_UINT16(event_hdr, HCI_EVENT_OPCODE_OFFSET,event_type);
+	STREAM_TO_uint16_t(event_hdr, HCI_EVENT_OPCODE_OFFSET,event_type);
 	
     if (event_type & HCI_EVNT_UNSOL_BASE)
     {
@@ -549,7 +549,7 @@ hci_unsol_event_handler(int8_t *event_hdr)
 				//Read DNS server
 				STREAM_TO_STREAM(data, recParams, NETAPP_IPCONFIG_IP_LENGTH);
 				// read the status
-				STREAM_TO_UINT8(event_hdr, HCI_EVENT_STATUS_OFFSET, *recParams);				
+				STREAM_TO_uint8_t(event_hdr, HCI_EVENT_STATUS_OFFSET, *recParams);				
 
 				if( tSLInformation.sWlanCB )
 				{
@@ -592,7 +592,7 @@ hci_unsol_event_handler(int8_t *event_hdr)
 		// The only synchronous event that can come from SL device in form of command complete is
 		// "Command Complete" on data sent, in case SL device was unable to transmit
 		//
-		STREAM_TO_UINT8(event_hdr, HCI_EVENT_LENGTH_OFFSET, tSLInformation.slTransmitDataError);
+		STREAM_TO_uint8_t(event_hdr, HCI_EVENT_LENGTH_OFFSET, tSLInformation.slTransmitDataError);
         update_socket_active_status(M_BSD_RESP_PARAMS_OFFSET(event_hdr));
 
 		return (1);
@@ -678,7 +678,7 @@ hci_event_unsol_flowcontrol_handler(int8_t *pEvent)
     
   
 
-    STREAM_TO_UINT16((int8_t *)pEvent,HCI_EVENT_HEADER_SIZE,pusNumberOfHandles);
+    STREAM_TO_uint16_t((int8_t *)pEvent,HCI_EVENT_HEADER_SIZE,pusNumberOfHandles);
 
   
     pReadPayload = ((int8_t *)pEvent +
@@ -688,7 +688,7 @@ hci_event_unsol_flowcontrol_handler(int8_t *pEvent)
     
     for(i = 0; i < pusNumberOfHandles ; i++)
     {
-        STREAM_TO_UINT16(pReadPayload, FLOW_CONTROL_EVENT_FREE_BUFFS_OFFSET, value);
+        STREAM_TO_uint16_t(pReadPayload, FLOW_CONTROL_EVENT_FREE_BUFFS_OFFSET, value);
 		temp += value;
         pReadPayload += FLOW_CONTROL_EVENT_SIZE;  
     }

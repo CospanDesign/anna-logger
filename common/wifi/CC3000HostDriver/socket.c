@@ -71,6 +71,8 @@
 #define SOCKET_GET_SOCK_OPT_PARAMS_LEN		(12)
 #define SOCKET_RECV_FROM_PARAMS_LEN			(12)
 #define SOCKET_SENDTO_PARAMS_LEN			(24)
+#define SOCKET_MDNS_ADVERTISE_PARAMS_LEN	(12)
+#define SOCKET_GET_MSS_VALUE_PARAMS_LEN		(4)
 
 //
 // The legnth of arguments for the SEND command: sd + buff_offset + len + flags, while size of each parameter
@@ -85,7 +87,7 @@
 
 #define SIMPLE_LINK_HCI_CMND_TRANSPORT_HEADER_SIZE  (SPI_HEADER_SIZE + SIMPLE_LINK_HCI_CMND_HEADER_SIZE)
 
-
+#define MDNS_DEVICE_SERVICE_MAX_LENGTH 	(32)
 //*****************************************************************************
 //
 //! int useBuff(buff_mngr_flag_t blocked)
@@ -469,9 +471,7 @@ listen(int16_t sd, int16_t backlog)
  * \warning
  */
 #ifndef CC3000_TINY_DRIVER
-int 
-gethostbyname(int8_t * hostname, uint16_t usNameLen, uint32_t* out_ip_addr)
-{
+int gethostbyname(char * hostname, uint16_t usNameLen, uint32_t* out_ip_addr){
     tBsdGethostbynameParams ret;
     uint8_t *ptr, *args;
     
@@ -1201,4 +1201,34 @@ sendto(int16_t sd, const void *buf, int16_t len, int16_t flags, const sockaddr *
        socklen_t tolen)
 {
     return(simple_link_send(sd, buf, len, flags, to, tolen, HCI_CMND_SENDTO));
+}
+
+
+int16_t mdnsAdvertiser(uint16_t mdnsEnabled, char * deviceServiceName, uint16_t deviceServiceNameLength)
+{
+	int8_t ret;
+	uint8_t *pTxBuffer, *pArgs;
+	
+	if (deviceServiceNameLength > MDNS_DEVICE_SERVICE_MAX_LENGTH)
+	{
+		return EFAIL;
+	}
+	
+	pTxBuffer = tSLInformation.pucTxCommandBuffer;
+	pArgs = (pTxBuffer + SIMPLE_LINK_HCI_CMND_TRANSPORT_HEADER_SIZE);
+	
+	// Fill in HCI packet structure
+	pArgs = UINT32_TO_STREAM(pArgs, mdnsEnabled);
+	pArgs = UINT32_TO_STREAM(pArgs, 8);
+	pArgs = UINT32_TO_STREAM(pArgs, deviceServiceNameLength);
+	ARRAY_TO_STREAM(pArgs, deviceServiceName, deviceServiceNameLength);
+	
+	// Initiate a HCI command
+	hci_command_send(HCI_CMND_MDNS_ADVERTISE, pTxBuffer, SOCKET_MDNS_ADVERTISE_PARAMS_LEN + deviceServiceNameLength);
+	
+	// Since we are in blocking state - wait for event complete
+	SimpleLinkWaitEvent(HCI_EVNT_MDNS_ADVERTISE, &ret);
+	
+	return ret;
+	
 }

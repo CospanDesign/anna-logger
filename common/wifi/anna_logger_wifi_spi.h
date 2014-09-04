@@ -59,8 +59,11 @@ extern void WlanInterruptEnable(void);
 extern void WlanInterruptDisable(void);
 extern void WriteWlanPin(uint8_t val);
 
-uint8_t * sendDrivePatch(uint32_t *length);
-uint8_t * sendBootLoaderPatch(uint32_t *length);
-uint8_t * sendWLFWPatch(uint32_t *length);
+
+void cc3k_int_poll(void);
+
+int8_t * sendDrivePatch(uint32_t *length);
+int8_t * sendBootLoaderPatch(uint32_t *length);
+int8_t * sendWLFWPatch(uint32_t *length);
 
 #endif

@@ -41,10 +41,11 @@
 //*****************************************************************************
 
 #include "security.h"
+#include "nvmem.h"
 
 #ifndef CC3000_UNENCRYPTED_SMART_CONFIG
 // foreward sbox
-const UINT8 sbox[256] =   {
+const uint8_t sbox[256] =   {
 //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, //0
 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0, //1
@@ -63,7 +64,7 @@ const UINT8 sbox[256] =   {
 0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf, //E
 0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 }; //F
 // inverse sbox
-const UINT8 rsbox[256] =
+const uint8_t rsbox[256] =
 { 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb
 , 0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb
 , 0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e
@@ -81,11 +82,11 @@ const UINT8 rsbox[256] =
 , 0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61
 , 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
 // round constant
-const UINT8 Rcon[11] = {
+const uint8_t Rcon[11] = {
   0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
 
-UINT8 expandedKey[176];
+uint8_t expandedKey[176];
 
 //*****************************************************************************
 //
@@ -100,9 +101,9 @@ UINT8 expandedKey[176];
 //!
 //*****************************************************************************
 
-void expandKey(UINT8 *expandedKey, UINT8 *key)
+void expandKey(uint8_t *key)
 {
-  UINT16 ii, buf1;
+  uint16_t ii, buf1;
   for (ii=0;ii<16;ii++)
     expandedKey[ii] = key[ii];
   for (ii=1;ii<11;ii++){
@@ -139,7 +140,7 @@ void expandKey(UINT8 *expandedKey, UINT8 *key)
 //!
 //*****************************************************************************
 
-UINT8 galois_mul2(UINT8 value)
+uint8_t galois_mul2(uint8_t value)
 {
 	if (value>>7)
 	{
@@ -173,9 +174,9 @@ UINT8 galois_mul2(UINT8 value)
 //!
 //*****************************************************************************
 
-void aes_encr(UINT8 *state, UINT8 *expandedKey)
+void aes_encr(uint8_t *state)
 {
-  UINT8 buf1, buf2, buf3, round;
+  uint8_t buf1, buf2, buf3, round;
 
   for (round = 0; round < 9; round ++){
     // addroundkey, sbox and shiftrows
@@ -300,10 +301,10 @@ void aes_encr(UINT8 *state, UINT8 *expandedKey)
 //!
 //*****************************************************************************
 
-void aes_decr(UINT8 *state, UINT8 *expandedKey)
+void aes_decr(uint8_t *state)
 {
-  UINT8 buf1, buf2, buf3;
-  INT8 round;
+  uint8_t buf1, buf2, buf3;
+  int8_t round;
   round = 9;
 
   // initial addroundkey
@@ -443,11 +444,11 @@ void aes_decr(UINT8 *state, UINT8 *expandedKey)
 //!
 //*****************************************************************************
 
-void aes_encrypt(UINT8 *state, UINT8 *key)
+void aes_encrypt(uint8_t *state, uint8_t *key)
 {
 	// expand the key into 176 bytes
-	expandKey(expandedKey, key);
-	aes_encr(state, expandedKey);
+	expandKey(key);
+	aes_encr(state);
 }
 
 //*****************************************************************************
@@ -467,10 +468,10 @@ void aes_encrypt(UINT8 *state, UINT8 *key)
 //!
 //*****************************************************************************
 
-void aes_decrypt(UINT8 *state, UINT8 *key)
+void aes_decrypt(uint8_t *state, uint8_t *key)
 {
-    expandKey(expandedKey, key);       // expand the key into 176 bytes
-    aes_decr(state, expandedKey);
+    expandKey(key);       // expand the key into 176 bytes
+    aes_decr(state);
 }
 
 //*****************************************************************************
@@ -488,7 +489,7 @@ void aes_decrypt(UINT8 *state, UINT8 *key)
 //!
 //*****************************************************************************
 
-int32_t aes_read_key(UINT8 *key)
+int32_t aes_read_key(uint8_t *key)
 {
 	int32_t	returnValue;
 
@@ -511,11 +512,12 @@ int32_t aes_read_key(UINT8 *key)
 //!
 //*****************************************************************************
 
-int32_t aes_write_key(UINT8 *key)
+int32_t aes_write_key(uint8_t *key)
 {
 	int32_t	returnValue;
 
 	returnValue = nvmem_write(NVMEM_AES128_KEY_FILEID, AES128_KEY_SIZE, 0, key);
+
 
 	return returnValue;
 }

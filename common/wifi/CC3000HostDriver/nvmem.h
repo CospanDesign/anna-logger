@@ -75,6 +75,10 @@ extern "C" {
 #define NVMEM_BOOTLOADER_SP_FILEID 					(10)
 #define NVMEM_RM_FILEID			 					(11)
 
+/* NVMEM file ID - user files*/
+#define NVMEM_AES128_KEY_FILEID	 					(12)
+#define NVMEM_SHARED_MEM_FILEID	 					(13)
+
 /*  max entry in order to invalid nvmem              */
 #define NVMEM_MAX_ENTRY                              (14)
 
@@ -110,7 +114,7 @@ extern int16_t nvmem_read(uint32_t file_id, uint32_t length, uint32_t offset, ui
 
 
 
-
+extern int16_t nvmem_write(uint32_t ulFileId, uint32_t ulLength, uint32_t ulEntryOffset, uint8_t *buff);
 /*****************************************************************************
  * \brief Write MAC address.
  *  
@@ -188,6 +192,8 @@ extern	uint8_t nvmem_write_patch(uint32_t ulFileId, uint32_t spLength, const uin
 extern	uint8_t nvmem_read_sp_version(uint8_t* patchVer);
 #endif
 
+
+extern int32_t nvmem_create_entry(uint32_t file_id, uint32_t new_len);
 //*****************************************************************************
 //
 // Mark the end of the C bindings section for C++ compilers.

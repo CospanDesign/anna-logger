@@ -843,6 +843,14 @@
       <SubType>compile</SubType>
       <Link>src\WIFI\os.h</Link>
     </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\security.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\security.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\CC3000HostDriver\security.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\security.h</Link>
+    </Compile>
     <Compile Include="..\common\wifi\CC3000HostDriver\socket.c">
       <SubType>compile</SubType>
       <Link>src\WIFI\socket.c</Link>

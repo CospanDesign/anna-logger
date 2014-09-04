@@ -14,9 +14,11 @@
 #include <wlan.h>
 #include <hci.h>
 #include <socket.h>
+#include <security.h>
+#include <evnt_handler.h>
 
 
-#define DELAY(delay_timeout)  vtaskDelay(delay_timeout/portTICK_RATE_MS)
+#define DELAY(delay_timeout)  vTaskDelay(delay_timeout/portTICK_RATE_MS)
 #define PRINT(output_string)  dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string);
 #define PRINTLN(output_string)  dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string); dbg_print_str("\r\n");
 
@@ -26,8 +28,7 @@
 #define SL_SIMPLE_CONFIG_PREFIX_LENGTH			(3)
 #define WLAN_SMART_CONFIG_START_PARAMS_LEN		(4)
 
-UINT8 key[AES128_KEY_SIZE];
-UINT8 profileArray[SMART_CONFIG_PROFILE_SIZE];
+uint8_t profileArray[SMART_CONFIG_PROFILE_SIZE];
 
 #define MAXSSID									(32)
 #define MAXLENGTHKEY							(32)  /* Cleared for 32 bytes by TI engineering 29/08/13 */
@@ -47,7 +48,7 @@ volatile uint16_t cc3000_flags;
 volatile uint16_t ul_socket;
 char _cc3000_prefix[] = {'T', 'T', 'T'};
 
-uint8_t ping_reportnum;
+uint8_t ping_report_num;
 netapp_pingreport_args_t ping_report;
 ResultStruct_t SSIDScanResultBuff;
 
@@ -69,7 +70,7 @@ static void anna_logger_wifi_callback(int16_t event_type, int8_t * data, uint8_t
 		cc3000_flags |= OK_TO_SHUT_DOWN;
 	}
 	if (event_type == HCI_EVNT_WLAN_ASYNC_PING_REPORT){
-		ping_reportnum++;
+		ping_report_num++;
 		memcpy(&ping_report, data, length);
 	}
 	if (event_type == HCI_EVNT_BSD_TCP_CLOSE_WAIT) {
@@ -96,12 +97,14 @@ bool wifi_init(uint8_t patch_request, bool use_smart_config_data, const char *de
               &WlanInterruptEnable,
               &WlanInterruptDisable,
               &WriteWlanPin);
+		  
 	
 /*			  
 extern void wlan_init(		
 				tWlanCB	 				sWlanCB,
 				tFWPatches				sFWPatches,
 				tDriverPatches			sDriverPatches,
+				
 				tBootLoaderPatches		sBootLoaderPatches,
 				tWlanReadInteruptPin	sReadWlanInterruptPin,
 				tWlanInterruptEnable	sWlanInterruptEnable,
@@ -207,7 +210,7 @@ bool disconnect(void){
     //We're not even initialized, return
     return false;
   }
-  long retval = wlan_desconnect();
+  long retval = wlan_disconnect();
   return retval != 0 ? false : true;
 }
 bool delete_profiles(void){
@@ -267,10 +270,10 @@ bool set_mac_address(uint8_t address[6]){
 }
 bool set_static_ip_address(uint32_t ip, uint32_t subnet_mask, uint32_t default_gateway, uint32_t dns_server){
   ip = (ip >> 24) | ((ip >> 8) & 0x0000FF00L) | ((ip << 8) & 0x00FF0000L) | (ip << 24);
-  subnetMask = (subnetMask >> 24) | ((subnetMask >> 8) & 0x0000FF00L) | ((subnetMask << 8) & 0x00FF0000L) | (subnetMask << 24);
-  defaultGateway = (defaultGateway >> 24) | ((defaultGateway >> 8) & 0x0000FF00L) | ((defaultGateway << 8) & 0x00FF0000L) | (defaultGateway << 24);
-  dnsServer = (dnsServer >> 24) | ((dnsServer >> 8) & 0x0000FF00L) | ((dnsServer << 8) & 0x00FF0000L) | (dnsServer << 24);
-  if (netapp_dhcp(&ip, &subnetMask, &defaultGateway, &dnsServer) != 0) {
+  subnet_mask = (subnet_mask >> 24) | ((subnet_mask >> 8) & 0x0000FF00L) | ((subnet_mask << 8) & 0x00FF0000L) | (subnet_mask << 24);
+  default_gateway = (default_gateway >> 24) | ((default_gateway >> 8) & 0x0000FF00L) | ((default_gateway << 8) & 0x00FF0000L) | (default_gateway << 24);
+  dns_server = (dns_server >> 24) | ((dns_server >> 8) & 0x0000FF00L) | ((dns_server << 8) & 0x00FF0000L) | (dns_server << 24);
+  if (netapp_dhcp(&ip, &subnet_mask, &default_gateway, &dns_server) != 0) {
     return false;
   }
   wlan_stop();
@@ -297,7 +300,7 @@ bool connect_to_ap(const char *ssid, const char *key, uint8_t secmode, uint8_t a
     if (!retry_forever){
       //we will not retry forever
       if (attempts == 0){
-        return checkConnected();
+        return check_connected();
       } 
       attempts -= 1;
     }
@@ -360,9 +363,12 @@ bool connect_to_secure(const char *ssid, const char *key, int32_t secmode){
                 "Failed setting the connection policy",
                 false);
   DELAY(500);
-  CHECK_SUCCESS(wlan_connect(secmode, (char *)ssid, strlen(ssid),
-                             NULL,
-                             (uint8_t *)key, strlen(key)),
+  CHECK_SUCCESS(wlan_connect(	secmode,
+								(int8_t *)ssid, 
+								(int16_t) strlen(ssid),
+								NULL,
+								(uint8_t *)key, 
+								(int16_t) strlen(key)),
                 "SSID Connection Failed",
                 false);
 
@@ -379,8 +385,11 @@ bool connect_open(const char *ssid){
                 false);
   DELAY(500);
   CHECK_SUCCESS(wlan_connect(WLAN_SEC_UNSEC,
-                             (const char *) ssid, strlen(ssid),
-                             0, NULL, 0),
+                             (char *) ssid,
+							 strlen(ssid),
+                             0,
+							 NULL,
+							 0),
                 "SSID connection failed",
                 false);
   #else
@@ -415,8 +424,8 @@ bool get_ip_address(uint32_t *retip, uint32_t *netmask, uint32_t *gateway, uint3
   memcpy(retip, ipconfig.aucIP, 4);
   memcpy(netmask, ipconfig.aucSubnetMask, 4);
   memcpy(gateway, ipconfig.aucDefaultGateway, 4);
-  memcpy(dhcpserv, ipconfig.aucDHCPServer, 4);
-  memcpy(dnsserv, ipconfig.aucDNSServer, 4);
+  memcpy(dhcp_serv, ipconfig.aucDHCPServer, 4);
+  memcpy(dns_serv, ipconfig.aucDNSServer, 4);
 
   return true;
 }
@@ -442,19 +451,19 @@ bool connect_tcp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t 
 
   //Try to open the socket
 
-  memset(&sockAddress, 0x00, sizeof(socketAddress));
+  memset(&sockAddress, 0x00, sizeof(sockAddress));
 
-  socketAddress.sa_family = AF_INET;
-  socketAddress.sa_data[0] = (dest_port & 0xFF00) >> 8;  //Set the port number
-  socketAddress.sa_data[1] = (dest_port & 0x00FF);
-  socketAddress.sa_data[2] = dest_ip >> 24;
-  socketAddress.sa_data[3] = dest_ip >> 16;
-  socketAddress.sa_data[4] = dest_ip >> 8;
-  socketAddress.sa_data[5] = dest_ip;
+  sockAddress.sa_family = AF_INET;
+  sockAddress.sa_data[0] = (dest_port & 0xFF00) >> 8;  //Set the port number
+  sockAddress.sa_data[1] = (dest_port & 0x00FF);
+  sockAddress.sa_data[2] = dest_ip >> 24;
+  sockAddress.sa_data[3] = dest_ip >> 16;
+  sockAddress.sa_data[4] = dest_ip >> 8;
+  sockAddress.sa_data[5] = dest_ip;
 
   PRINT("Connected!");
 
-  if (!setup_anna_logger_wifi_client(client, tcp_socket, &socketAddress, sizeof(socketAddress))){
+  if (!setup_anna_logger_wifi_client(client, tcp_socket, &sockAddress, sizeof(sockAddress))){
     PRINT("Connection Error\n");
     closesocket(tcp_socket);
     return false;
@@ -471,10 +480,10 @@ bool connect_udp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t 
   //protocol = IPROTO_TCP, IPROTO_UDP, or IPROTO_RAW
   PRINT ("Creating UDP Socket\n");
 
-  udp_socket = socket(AF_INET, SOCK_DGRAM, IPROTO_UDP);
+  udp_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (-1 == udp_socket){
     PRINT("Failed to open socket\n");
-    return false
+    return false;
   }
 
   memset(&socketAddress, 0x00, sizeof(socketAddress));
@@ -542,7 +551,7 @@ status_t get_status(void){
     case 3:
       return STATUS_CONNECTED;
     case 4:
-    default
+    default:
       return STATUS_DISCONNECTED;
       break;
   }
@@ -568,7 +577,7 @@ uint8_t get_next_ssid(uint8_t *rssi, uint8_t *secmode, char * ssidname){
   uint8_t valid = (SSIDScanResultBuff.rssiByte & (~0xFE));
   
   *rssi = (SSIDScanResultBuff.rssiByte >> 1);
-  *secmode = (SSIDScanResultBuff.sec_ssidlen & (~0xFC));
+  *secmode = (SSIDScanResultBuff.Sec_ssidLen & (~0xFC));
   uint8_t ssid_len = (SSIDScanResultBuff.Sec_ssidLen >> 2);
   strncpy(ssidname, (char *)SSIDScanResultBuff.ssid_name, ssid_len);
   ssidname[ssid_len] = 0;
@@ -580,7 +589,7 @@ uint8_t get_next_ssid(uint8_t *rssi, uint8_t *secmode, char * ssidname){
 bool list_ssid_results(void){
 	return false;
 }
-bool start_smart_config(const char *_device_name, const char * smart_config_key){
+bool start_smart_config(const char *device_name, const char * smart_config_key){
   bool enable_aes = smart_config_key != NULL;
   uint32_t timeout = 0;
 
@@ -613,7 +622,7 @@ bool start_smart_config(const char *_device_name, const char * smart_config_key)
 
 
   //Create new entry for AES encryption key
-  CHECK_SUCCESS(nvem_create_entry(NVMEM_AES128_KEY_FILEID, 16),
+  CHECK_SUCCESS(nvmem_create_entry(NVMEM_AES128_KEY_FILEID, 16),
                 "Failed to create NVMEM entry",
                 false);
 
@@ -623,7 +632,7 @@ bool start_smart_config(const char *_device_name, const char * smart_config_key)
                   false);
   }
   PRINT("Set Prefix...");
-  CHECK_SUCCESS(wlan_smart_config_set_prefix((char *)&_cc3300_prefix),
+  CHECK_SUCCESS(wlan_smart_config_set_prefix((char *)&_cc3000_prefix),
                 "Failed setting the SmartConfig prefix",
                 false);
   PRINT("Success\n");
@@ -635,7 +644,7 @@ bool start_smart_config(const char *_device_name, const char * smart_config_key)
   PRINT("Success\n");
 
   PRINT("Starting smart config");
-  while ((cc3300_flags & IS_SMART_CONFIG_FINISHED) == 0){
+  while ((cc3000_flags & IS_SMART_CONFIG_FINISHED) == 0){
     cc3k_int_poll();
     timeout += 10;
     if (timeout > 60000){ //wait about 60 seconds
@@ -691,57 +700,7 @@ bool start_smart_config(const char *_device_name, const char * smart_config_key)
   }
   return true;
 }
-int32_t wlan_smart_config_process(){
-	int32_t retval = 0;
-	uint32_t ssid_len;
-	uint32_t key_len;
-	uint8_t *dec_key_ptr;
-	uint8_t *ssid_ptr;
-	
-	//Read the key from the EEPROM - File ID 12
-	retval = aes_read_key(key);
-	if (retval != 0){
-		return retval;
-	}	
-	
-	//read the received data from fileID #13 and parse it according to the followings:
-	//	1) SSID LEN - not encrypted
-	//	2) SSID - not encyrpted
-	//	3) KEY LEN - not encrypted. Always 32 bytes long
-	//	4) Security type - not encyrpted
-	//	5) KEY - encyrpted together with true key length as the first byte in KEY
-	//		to elaborate, there are two corner cases:
-	//			1) the KEY is 32 bytes long. In this case, the first byte does not represent KEY length
-	//			2) the KEY is 31 bytes long. In this case, the first byte represents KEY length and equals 31
-	retval = nvmem_read(NVMEM_SHARED_MEM_FILEID, SMART_CONFIG_PROFILE_SIZE, 0 , )
-}
-int32_t wlan_smart_config_set_prefix(char * prefix){
-	int32_t ret;
-	uint8_t *ptr;
-	uint8_t *args;
-	
-	ret = EFAIL;
-	ptr = tSLInformation.pucTxCommandBuffer;
-	args = (ptr + HEADERS_SIZE_CMD);
-	
-	if (prefix == NULL){
-		return ret;
-	}
-	else {
-		*prefix			= 'T';
-		*(prefix + 1)	= 'T';
-		*(prefix + 2)	= 'T';
-	}
-	
-	ARRAY_TO_STREAM(args, prefix, SL_SIMPLE_CONFIG_PREFIX_LENGTH);
-	hci_command_send(HCI_CMND_WLAN_IOCTL_SIMPLE_CONFIG_SET_PREFIX,
-					 ptr,
-					 SL_SIMPLE_CONFIG_PREFIX_LENGTH);
-					 
-	//Wait for command complete event
-	SimpleLinkWaitEvent(HCI_CMND_WLAN_IOCTL_SIMPLE_CONFIG_SET_PREFIX, &ret);
-	return (ret);
-}
+
 bool get_ip_config(tNetappIpconfigRetArgs *ipConfig){
   if ((cc3000_flags & INITIALIZED) == 0){
     return false;
@@ -755,7 +714,7 @@ bool get_ip_config(tNetappIpconfigRetArgs *ipConfig){
   netapp_ipconfig(ipConfig);
   return true;
 }
-uint16_t ping (uint32_t ip, uint8_t attepts, uint16_t timeout, uint8_t size){
+uint16_t ping (uint32_t ip, uint8_t attempts, uint16_t timeout, uint8_t size){
   if ((cc3000_flags & INITIALIZED) == 0){
     return false;
   }
@@ -771,7 +730,7 @@ uint16_t ping (uint32_t ip, uint8_t attepts, uint16_t timeout, uint8_t size){
   ping_report.packets_received = 0;
 
   //perform a ping request
-  netapp_ping_sent(&rev_ip, attempts, size, timeout);
+  netapp_ping_send(&rev_ip, attempts, size, timeout);
   //wait 2 x the length of the timeout * attempts
   DELAY(timeout * attempts * 2);
 
@@ -800,7 +759,7 @@ bool scan_ssids(uint32_t time){
   //Check if the stack is initialized
   if ((cc3000_flags & INITIALIZED) == 0){
     //We're not initialized so don't even scan
-    return false
+    return false;
   }
 
   //If the time is 0 then this will just abort
@@ -814,7 +773,7 @@ bool scan_ssids(uint32_t time){
 
 anna_logger_wifi_client_t * new_anna_logger_wifi_client(){
   anna_logger_wifi_client_t * alwc = NULL;
-  alwc = (anna_logger_wifif_client_t *) malloc(sizeof(anna_logger_wifi_client_t));
+  alwc  = (anna_logger_wifi_client_t *) malloc(sizeof(anna_logger_wifi_client_t));
   if (alwc == NULL){
     PRINT("Error allocating space for anna_logger_wifi_client\n");
     return NULL;

@@ -71,9 +71,9 @@ hci_command_send(uint16_t usOpcode, uint8_t *pucBuff,
  
 	stream = (pucBuff + SPI_HEADER_SIZE);
 	
-	UINT8_TO_STREAM(stream, HCI_TYPE_CMND);
-	stream = UINT16_TO_STREAM(stream, usOpcode);
-	UINT8_TO_STREAM(stream, ucArgsLength);
+	uint8_t_TO_STREAM(stream, HCI_TYPE_CMND);
+	stream = uint16_t_TO_STREAM(stream, usOpcode);
+	uint8_t_TO_STREAM(stream, ucArgsLength);
 
     //
 	// Update the opcode of the event we will be waiting for
@@ -109,10 +109,10 @@ hci_data_send(uint8_t ucOpcode,
  
 	stream = ((ucArgs) + SPI_HEADER_SIZE);
 	
-	UINT8_TO_STREAM(stream, HCI_TYPE_DATA);
-	UINT8_TO_STREAM(stream, ucOpcode);
-	UINT8_TO_STREAM(stream, usArgsLength);
-	stream = UINT16_TO_STREAM(stream, usArgsLength + usDataLength + usTailLength);
+	uint8_t_TO_STREAM(stream, HCI_TYPE_DATA);
+	uint8_t_TO_STREAM(stream, ucOpcode);
+	uint8_t_TO_STREAM(stream, usArgsLength);
+	stream = uint16_t_TO_STREAM(stream, usArgsLength + usDataLength + usTailLength);
 
 	//
 	// Send the packet over the SPI
@@ -141,10 +141,10 @@ void hci_data_command_send(uint16_t usOpcode, uint8_t *pucBuff,
 { 
  	uint8_t *stream = (pucBuff + SPI_HEADER_SIZE);
 
-	UINT8_TO_STREAM(stream, HCI_TYPE_DATA);
-	UINT8_TO_STREAM(stream, usOpcode);
-	UINT8_TO_STREAM(stream, ucArgsLength);
-	stream = UINT16_TO_STREAM(stream, ucArgsLength + ucDataLength);
+	uint8_t_TO_STREAM(stream, HCI_TYPE_DATA);
+	uint8_t_TO_STREAM(stream, usOpcode);
+	uint8_t_TO_STREAM(stream, ucArgsLength);
+	stream = uint16_t_TO_STREAM(stream, ucArgsLength + ucDataLength);
 
 
     //
@@ -177,17 +177,17 @@ hci_patch_send(uint8_t ucOpcode, uint8_t *pucBuff, int8_t *patch, uint16_t usDat
 
 	uint8_t *stream = (pucBuff + SPI_HEADER_SIZE);
 	
-	UINT8_TO_STREAM(stream, HCI_TYPE_PATCH);
-	UINT8_TO_STREAM(stream, ucOpcode);
-	stream = UINT16_TO_STREAM(stream, usDataLength + SIMPLE_LINK_HCI_PATCH_HEADER_SIZE);
+	uint8_t_TO_STREAM(stream, HCI_TYPE_PATCH);
+	uint8_t_TO_STREAM(stream, ucOpcode);
+	stream = uint16_t_TO_STREAM(stream, usDataLength + SIMPLE_LINK_HCI_PATCH_HEADER_SIZE);
 
 	
 	
 
 	if (usDataLength <= SL_PATCH_PORTION_SIZE)
 	{
-		UINT16_TO_STREAM(stream, usDataLength);
-		stream = UINT16_TO_STREAM(stream, usDataLength);
+		uint16_t_TO_STREAM(stream, usDataLength);
+		stream = uint16_t_TO_STREAM(stream, usDataLength);
 		
 		
 		
@@ -203,8 +203,8 @@ hci_patch_send(uint8_t ucOpcode, uint8_t *pucBuff, int8_t *patch, uint16_t usDat
 	{
 		
         usTransLength = (usDataLength/SL_PATCH_PORTION_SIZE);
-		UINT16_TO_STREAM(stream, usDataLength + SIMPLE_LINK_HCI_PATCH_HEADER_SIZE + usTransLength*SIMPLE_LINK_HCI_PATCH_HEADER_SIZE);
-	    stream = UINT16_TO_STREAM(stream, SL_PATCH_PORTION_SIZE);
+		uint16_t_TO_STREAM(stream, usDataLength + SIMPLE_LINK_HCI_PATCH_HEADER_SIZE + usTransLength*SIMPLE_LINK_HCI_PATCH_HEADER_SIZE);
+	    stream = uint16_t_TO_STREAM(stream, SL_PATCH_PORTION_SIZE);
 		
 		
 		memcpy(pucBuff + SPI_HEADER_SIZE + HCI_PATCH_HEADER_SIZE, patch, SL_PATCH_PORTION_SIZE);

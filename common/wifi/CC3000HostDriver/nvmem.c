@@ -54,6 +54,7 @@
 //*****************************************************************************
 
 #define NVMEM_READ_PARAMS_LEN 	(12)
+#define NVMEM_CREATE_PARAMS_LEN (8)
 #define NVMEM_WRITE_PARAMS_LEN  (16)
 /*****************************************************************************
  * \brief Read data from nvmem
@@ -309,6 +310,24 @@ uint8_t nvmem_read_sp_version(uint8_t* patchVer)
     return(retBuf[0]);
 }
 #endif
+
+int32_t nvmem_create_entry(uint32_t file_id, uint32_t new_len){
+	uint8_t *ptr;
+	uint8_t *args;
+	uint8_t retval;
+	
+	ptr = tSLInformation.pucTxCommandBuffer;
+	args = (ptr + HEADERS_SIZE_CMD);
+	
+	//fill in HCI packet structure
+	args = UINT32_TO_STREAM(args, file_id);
+	args = UINT32_TO_STREAM(args, new_len);
+	
+	//Initiate an HCI command
+	hci_command_send(HCI_CMND_NVMEM_CREATE_ENTRY, ptr, NVMEM_CREATE_PARAMS_LEN);
+	SimpleLinkWaitEvent(HCI_CMND_NVMEM_CREATE_ENTRY, &retval);
+	return retval;
+}
 
 //*****************************************************************************
 //

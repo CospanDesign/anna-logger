@@ -97,7 +97,7 @@ uint8_t* UINT32_TO_STREAM_f (uint8_t *p, uint32_t u32)
 	return p;
 }
 //This function is used for copying 16 bit to stream while converting to little endian format.
-uint8_t* UINT16_TO_STREAM_f (uint8_t *p, uint16_t u16)
+uint8_t* uint16_t_TO_STREAM_f (uint8_t *p, uint16_t u16)
 {
 	*(p)++ = (uint8_t)(u16);
 	*(p)++ = (uint8_t)((u16) >> 8);
@@ -106,7 +106,7 @@ uint8_t* UINT16_TO_STREAM_f (uint8_t *p, uint16_t u16)
 
 
 //This function is used for copying received stream to 16 bit in little endian format.
-uint16_t STREAM_TO_UINT16_f(int8_t* p, uint16_t offset)
+uint16_t STREAM_TO_uint16_t_f(int8_t* p, uint16_t offset)
 {
         return (uint16_t)((uint16_t)((uint16_t)(*(p + offset + 1)) << 8) + (uint16_t)(*(p + offset)));
 }

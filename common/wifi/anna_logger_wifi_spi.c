@@ -27,8 +27,12 @@ struct spi_master_vec_bufdesc spi_data_in[2];
 
 spi_information_t spi_information;
 
+#define READ                            (3)
+#define WRITE                           (1)
 #define HI(value)                       (((value) & 0xFF00) >> 8)
 #define LO(value)                       ((value) & 0x00FF)
+#define HEADERS_SIZE_EVNT               (SPI_HEADER_SIZE + 5)
+#define SPI_HEADER_SIZE                 (5)
 
 #define SPI_STATE_POWERUP				(0)
 #define SPI_STATE_INITIALIZED			(1)
@@ -40,7 +44,12 @@ spi_information_t spi_information;
 #define SPI_STATE_READ_FIRST_PORTION	(7)
 #define SPI_STATE_READ_EOT				(8)
 
+bool IN_IRQ;
+bool IRQ_ENABLE;
+
 void spi_wifi_init(void){
+	IN_IRQ = false;
+	IRQ_ENABLE = false;
 	//Initialization is done in the init.c
 	spi_master_vec_enable(&anna_wifi_master);
 	spi_data_out[1].data = NULL;
@@ -84,8 +93,11 @@ void spi_transfer(void * data_out, uint16_t data_out_length, void * data_in, uin
 }
 
 static void wifi_interrupt_callback(void){
-
+	IN_IRQ = true;
 	
+	
+	IN_IRQ = false;
+	return;
 }
 
 void SpiClose(void){
@@ -160,7 +172,7 @@ int16_t SpiWrite(uint8_t *data_out, uint16_t length){
 	//	for the purpose of overrun detection.
 	//	occurred we will be stuck here forever
 	
-	if (wlan_tx_buffer[CC33000_TX_BUFFER_SIZE - 1] != CC3000_BUFFER_MAGIC_NUMBER){
+	if (wlan_tx_buffer[CC3000_TX_BUFFER_SIZE - 1] != CC3000_BUFFER_MAGIC_NUMBER){
 		//Error, no magic number found!
 		while (1);
 	}
@@ -170,9 +182,9 @@ int16_t SpiWrite(uint8_t *data_out, uint16_t length){
 	
 	//First Write
 	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_transfer(data_out, 4);
+	spi_transfer(data_out, 4, NULL, 0);
 	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_transfer(&data_out[4], length - 4);
+	spi_transfer(&data_out[4], length - 4, NULL, 0);
 	
 	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
 	
@@ -183,13 +195,15 @@ int16_t SpiRead(uint8_t *data_in, uint16_t length){
 	return 0;
 }
 void SpiPauseSpi(void){
+	IRQ_ENABLE = false;
 	WlanInterruptDisable();
 }
 void SpiResumeSpi(void){
 	WlanInterruptEnable();
+	IRQ_ENABLE = true;
 }
 int16_t ReadWlanInterruptPin(void){
-	return 0;
+	return port_pin_get_input_level(ANNA_WIFI_IRQ_PIN);
 }
 void WlanInterruptEnable(void){
 	//Enable the callback
@@ -199,12 +213,11 @@ void WlanInterruptEnable(void){
 void WlanInterruptDisable(void){
 	//Disable the callback
 	extint_chan_disable_callback(WIFI_IRQ_CHANNEL,
-	EXTINT_CALLBACK_DETECT);
+	EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 void WriteWlanPin(uint8_t val){
-	//port_pin_set_output_level()
-	
+	port_pin_set_output_level(ANNA_WIFI_EN, val);
 }
 
 int8_t * sendDrivePatch(uint32_t *length){
@@ -220,4 +233,10 @@ int8_t * sendBootLoaderPatch(uint32_t *length){
 int8_t * sendWLFWPatch(uint32_t *length){
 	*length = 0;
 	return NULL;	
+}
+
+void cc3k_int_poll(void){
+	if ((port_pin_get_input_level(WIFI_IRQ_PIN) == LOW) && (!IRQ_ENABLE)){
+		wifi_interrupt_callback();
+	}
 }

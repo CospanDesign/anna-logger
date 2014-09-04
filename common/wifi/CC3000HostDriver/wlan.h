@@ -35,6 +35,7 @@
 #ifndef __WLAN_H__
 #define	__WLAN_H__
 
+#include <stdbool.h>
 #include "cc3000_common.h"
 
 //*****************************************************************************
@@ -46,6 +47,8 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+
+#define SMART_CONFIG_PROFILE_SIZE		67		// 67 = 32 (max ssid) + 32 (max key) + 1 (SSID length) + 1 (security type) + 1 (key length)
 
 #define      WLAN_SEC_UNSEC (0)
 #define      WLAN_SEC_WEP	(1)
@@ -171,7 +174,7 @@ extern void wlan_stop(void);
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-extern int16_t wlan_connect(uint32_t ulSecType, int8_t *ssid, int16_t ssid_len,
+extern int16_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
                         uint8_t *bssid, uint8_t *key, int16_t key_len);
 #else
 extern int16_t wlan_connect(int8_t *ssid, int16_t ssid_len);
@@ -479,6 +482,11 @@ extern int16_t wlan_first_time_config_stop(void);
 
 extern int16_t wlan_first_time_config_set_prefix(int8_t* cNewPrefix);
 
+
+
+bool check_smart_config_finished(void);
+int32_t wlan_smart_config_set_prefix(char * prefix);
+int32_t wlan_smart_config_process();
 //*****************************************************************************
 //
 // Close the Doxygen group.

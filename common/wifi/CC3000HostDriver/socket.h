@@ -650,7 +650,7 @@ extern int sendto(int16_t sd, const void *buf, int16_t len, int16_t flags,
  * \warning
  */
 #ifndef CC3000_TINY_DRIVER 
-extern int gethostbyname(int8_t * hostname, uint16_t usNameLen, uint32_t* out_ip_addr);
+extern int gethostbyname(char * hostname, uint16_t usNameLen, uint32_t* out_ip_addr);
 #endif
 //*****************************************************************************
 //
@@ -659,7 +659,7 @@ extern int gethostbyname(int8_t * hostname, uint16_t usNameLen, uint32_t* out_ip
 //
 //*****************************************************************************
 
-
+int16_t mdnsAdvertiser(uint16_t mdnsEnabled, char * deviceServiceName, uint16_t deviceServiceNameLength);
 //*****************************************************************************
 //
 // Mark the end of the C bindings section for C++ compilers.

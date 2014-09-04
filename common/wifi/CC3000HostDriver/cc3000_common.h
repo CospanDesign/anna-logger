@@ -232,24 +232,24 @@ extern void SimpleLinkWaitData(uint8_t *pBuf, uint8_t *from, uint8_t *fromlen);
 
 extern uint8_t* UINT32_TO_STREAM_f (uint8_t *p, uint32_t u32);
 
-extern uint8_t* UINT16_TO_STREAM_f (uint8_t *p, uint16_t u16);
+extern uint8_t* uint16_t_TO_STREAM_f (uint8_t *p, uint16_t u16);
 
-extern uint16_t STREAM_TO_UINT16_f(int8_t* p, uint16_t offset);
+extern uint16_t STREAM_TO_uint16_t_f(int8_t* p, uint16_t offset);
 
 extern uint32_t STREAM_TO_UINT32_f(int8_t* p, uint16_t offset);
 
 //This macro is used for copying 8 bit to stream while converting to little endian format.
-#define UINT8_TO_STREAM(_p, _val)	{*(_p)++ = (_val);}
+#define uint8_t_TO_STREAM(_p, _val)	{*(_p)++ = (_val);}
 //This macro is used for copying 16 bit to stream while converting to little endian format.
-#define UINT16_TO_STREAM(_p, _u16)	(UINT16_TO_STREAM_f(_p, _u16))
+#define uint16_t_TO_STREAM(_p, _u16)	(uint16_t_TO_STREAM_f(_p, _u16))
 //This macro is used for copying 32 bit to stream while converting to little endian format.
 #define UINT32_TO_STREAM(_p, _u32)	(UINT32_TO_STREAM_f(_p, _u32))
 //This macro is used for copying a specified value length bits (l) to stream while converting to little endian format.
 #define ARRAY_TO_STREAM(p, a, l) 	{register uint16_t _i; for (_i = 0; _i < l; _i++) *(p)++ = ((uint8_t *) a)[_i];}
 //This macro is used for copying received stream to 8 bit in little endian format.
-#define STREAM_TO_UINT8(_p, _offset, _u8)	{_u8 = (uint8_t)(*(_p + _offset));}
+#define STREAM_TO_uint8_t(_p, _offset, _u8)	{_u8 = (uint8_t)(*(_p + _offset));}
 //This macro is used for copying received stream to 16 bit in little endian format.
-#define STREAM_TO_UINT16(_p, _offset, _u16)	{_u16 = STREAM_TO_UINT16_f(_p, _offset);}
+#define STREAM_TO_uint16_t(_p, _offset, _u16)	{_u16 = STREAM_TO_uint16_t_f(_p, _offset);}
 //This macro is used for copying received stream to 32 bit in little endian format.
 #define STREAM_TO_UINT32(_p, _offset, _u32)	{_u32 = STREAM_TO_UINT32_f(_p, _offset);}
 #define STREAM_TO_STREAM(p, a, l) 	{register uint16_t _i; for (_i = 0; _i < l; _i++) *(a)++ = (uint8_t) p[_i];}

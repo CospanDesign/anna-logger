@@ -46,8 +46,15 @@
 #include "socket.h"
 #include "evnt_handler.h"
 #include "os.h"
+#include "nvmem.h"
+#include "security.h"
 
-sSimplLinkInformation tSLInformation;
+volatile sSimplLinkInformation tSLInformation;
+
+#ifndef CC3000_UNENCRYPTED_SMART_CONFIG
+uint8_t key[AES128_KEY_SIZE];
+uint8_t profileArray[SMART_CONFIG_PROFILE_SIZE];
+#endif //CC3000_UNENCRYPTED_SMART_CONFIG
 
 /* patches type */
 #define PATCHES_HOST_TYPE_WLAN_DRIVER   0x01
@@ -106,7 +113,7 @@ static void SimpleLink_Init_Start(uint16_t usPatchesAvailableAtHost)
     ptr = tSLInformation.pucTxCommandBuffer;
 	args = (uint8_t *)(ptr + HEADERS_SIZE_CMD);
 
-	UINT8_TO_STREAM(args, ((usPatchesAvailableAtHost) ? SL_PATCHES_REQUEST_FORCE_HOST : SL_PATCHES_REQUEST_DEFAULT));
+	uint8_t_TO_STREAM(args, ((usPatchesAvailableAtHost) ? SL_PATCHES_REQUEST_FORCE_HOST : SL_PATCHES_REQUEST_DEFAULT));
 	
 	// IRQ Line asserted - start the read buffer size command
 	hci_command_send(HCI_CMND_SIMPLE_LINK_START, ptr, WLAN_SL_INIT_START_PARAMS_LEN);
@@ -367,9 +374,8 @@ wlan_stop(void)
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-int16_t
-wlan_connect(uint32_t ulSecType, int8_t *ssid, int16_t ssid_len,
-             uint8_t *bssid, uint8_t *key, int16_t key_len)
+int16_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
+			 uint8_t *bssid, uint8_t *key, int16_t key_len)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -388,7 +394,7 @@ wlan_connect(uint32_t ulSecType, int8_t *ssid, int16_t ssid_len,
 	args = UINT32_TO_STREAM(args, ulSecType);
 	args = UINT32_TO_STREAM(args, 0x00000010 + ssid_len);
 	args = UINT32_TO_STREAM(args, key_len);
-	args = UINT16_TO_STREAM(args, 0);
+	args = uint16_t_TO_STREAM(args, 0);
 
 	//
 	// padding shall be zeroed
@@ -443,7 +449,7 @@ wlan_connect(int8_t *ssid, int16_t ssid_len)
 	args = UINT32_TO_STREAM(args, 0);
 	args = UINT32_TO_STREAM(args, 0x00000010 + ssid_len);
 	args = UINT32_TO_STREAM(args, 0);
-	args = UINT16_TO_STREAM(args, 0);
+	args = uint16_t_TO_STREAM(args, 0);
 
 	//
 	// padding shall be zeroed
@@ -636,7 +642,7 @@ wlan_add_profile(uint32_t ulSecType,
 	    {
 			args = UINT32_TO_STREAM(args, 0x00000014);
 			args = UINT32_TO_STREAM(args, ulSsidLen);
-			args = UINT16_TO_STREAM(args, 0);
+			args = uint16_t_TO_STREAM(args, 0);
 			if(ucBssid)
 		    {
 		    	ARRAY_TO_STREAM(args, ucBssid, ETH_ALEN);
@@ -657,7 +663,7 @@ wlan_add_profile(uint32_t ulSecType,
 	    {
 			args = UINT32_TO_STREAM(args, 0x00000020);
 			args = UINT32_TO_STREAM(args, ulSsidLen);
-			args = UINT16_TO_STREAM(args, 0);
+			args = uint16_t_TO_STREAM(args, 0);
 			if(ucBssid)
 		    {
 		    	ARRAY_TO_STREAM(args, ucBssid, ETH_ALEN);
@@ -691,7 +697,7 @@ wlan_add_profile(uint32_t ulSecType,
 	    {
 			args = UINT32_TO_STREAM(args, 0x00000028);
 			args = UINT32_TO_STREAM(args, ulSsidLen);
-			args = UINT16_TO_STREAM(args, 0);
+			args = uint16_t_TO_STREAM(args, 0);
 			if(ucBssid)
 		    {
 		    	ARRAY_TO_STREAM(args, ucBssid, ETH_ALEN);
@@ -1140,6 +1146,130 @@ wlan_first_time_config_set_prefix(int8_t* cNewPrefix)
 	SimpleLinkWaitEvent(HCI_CMND_WLAN_IOCTL_SIMPLE_CONFIG_SET_PREFIX, &ret);
 
     return(ret);    
+}
+
+int32_t wlan_smart_config_process(){
+	int32_t retval = 0;
+	uint32_t ssid_len;
+	uint32_t key_len;
+	uint8_t *dec_key_ptr;
+	uint8_t *ssid_ptr;
+	
+	//Read the key from the EEPROM - File ID 12
+	retval = aes_read_key(key);
+	if (retval != 0){
+		return retval;
+	}
+	
+	//read the received data from fileID #13 and parse it according to the followings:
+	//	1) SSID LEN - not encrypted
+	//	2) SSID - not encyrpted
+	//	3) KEY LEN - not encrypted. Always 32 bytes long
+	//	4) Security type - not encyrpted
+	//	5) KEY - encyrpted together with true key length as the first byte in KEY
+	//		to elaborate, there are two corner cases:
+	//			1) the KEY is 32 bytes long. In this case, the first byte does not represent KEY length
+	//			2) the KEY is 31 bytes long. In this case, the first byte represents KEY length and equals 31
+	retval = nvmem_read(NVMEM_SHARED_MEM_FILEID, SMART_CONFIG_PROFILE_SIZE, 0 , profileArray);
+	
+	if (retval != 0){
+		return retval;
+	}
+	ssid_ptr = &profileArray[1];
+	ssid_len = profileArray[0];
+	
+	dec_key_ptr = &profileArray[profileArray[0] + 3];
+	
+	aes_decrypt(dec_key_ptr, key);
+	
+	if (profileArray[profileArray[0] + 1] > 16){
+		aes_decrypt((uint8_t *) (dec_key_ptr + 16), key);
+	}
+	
+	if (*(uint8_t*) (dec_key_ptr + 31) != 0){
+		if (*dec_key_ptr == 31){
+			key_len = 31;
+			dec_key_ptr ++;
+		}
+		else {
+			key_len = 32;
+		}
+	}
+	else {
+		key_len = *dec_key_ptr;
+		dec_key_ptr++;
+	}
+	
+	//Add a profile
+	switch(profileArray[profileArray[0] + 2]){
+		case WLAN_SEC_UNSEC: {	//None
+			retval = wlan_add_profile(	profileArray[profileArray[0] + 2],	// Security Type
+			ssid_ptr,							// SSID
+			ssid_len,							// SSID Length
+			NULL,								// BSSID
+			1,									// Priority
+			0, 0, 0, 0, 0);
+			break;
+		}
+		case WLAN_SEC_WEP: {	//WEP
+			retval = wlan_add_profile(	profileArray[profileArray[0] + 2],	// Security Type
+			ssid_ptr,							// SSID
+			ssid_len,							// SSID Length
+			NULL,								// BSSID
+			1,									// Priority
+			key_len,							// Key Length
+			0,									// Key Index
+			0,
+			dec_key_ptr,						// Key
+			0);
+			break;
+		}
+		case WLAN_SEC_WPA:		//WPA
+		case WLAN_SEC_WPA2:		//WPA2
+		{
+			retval = wlan_add_profile(	WLAN_SEC_WPA2,						// Security Type
+			ssid_ptr,							// SSID
+			ssid_len,							// SSID Length
+			NULL,								// BSSID
+			1,									// Priority
+			0x18,									// Key Index
+			0x1e,
+			2,
+			dec_key_ptr,						// Key
+			key_len);
+			
+			break;
+		}
+		
+	}
+	return retval;
+}
+int32_t wlan_smart_config_set_prefix(char * prefix){
+	int32_t ret;
+	uint8_t *ptr;
+	uint8_t *args;
+	
+	ret = EFAIL;
+	ptr = tSLInformation.pucTxCommandBuffer;
+	args = (ptr + HEADERS_SIZE_CMD);
+	
+	if (prefix == NULL){
+		return ret;
+	}
+	else {
+		*prefix			= 'T';
+		*(prefix + 1)	= 'T';
+		*(prefix + 2)	= 'T';
+	}
+	
+	ARRAY_TO_STREAM(args, prefix, SL_SIMPLE_CONFIG_PREFIX_LENGTH);
+	hci_command_send(HCI_CMND_WLAN_IOCTL_SIMPLE_CONFIG_SET_PREFIX,
+	ptr,
+	SL_SIMPLE_CONFIG_PREFIX_LENGTH);
+	
+	//Wait for command complete event
+	SimpleLinkWaitEvent(HCI_CMND_WLAN_IOCTL_SIMPLE_CONFIG_SET_PREFIX, &ret);
+	return (ret);
 }
 
 //*****************************************************************************

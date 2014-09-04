@@ -9,7 +9,9 @@
 #include <wlan.h>
 #include <netapp.h>
 
-
+#define WIFI_ENABLE 1
+#define WIFI_DISABLE 0
+#define WIFI_STATUS_CONNECTED 1
 
 
 typedef struct Result_Struct{
@@ -68,10 +70,7 @@ bool check_connected(void);
 bool check_dhcp(void);
 bool get_ip_address(uint32_t *retip, uint32_t *netmask, uint32_t *gateway, uint32_t *dhcp_serv, uint32_t *dns_serv);
 
-//CC33000
-bool check_smart_config_finished(void);
-int32_t wlan_smart_config_set_prefix(char * prefix);
-int32_t wlan_smart_config_process();
+
 
 bool connect_tcp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t dest_port);
 bool connect_udp(anna_logger_wifi_client_t * client, uint32_t dest_ip, uint16_t dest_port);
