@@ -102,8 +102,9 @@ main_end_of_test:
 	}
 }
 
-static void led_task(void *params)
+static void wifi_task(void *params)
 {
+	wifi_init(0, false, "WIFI");
 	while (1) {
 		port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
 		vTaskDelay(333 / portTICK_RATE_MS);
@@ -123,9 +124,11 @@ int main (void)
 	system_init();
 	dbg_init();	
 	sd_mmc_init();
+
 	//spi_wifi_init();
 
 	//DBG_PRINT_STR(__func__, "Creating tasks\n");
+	
 	xTaskCreate(&fatfs_task,
 		(const signed char *)"FAT FS task",
 		configMINIMAL_STACK_SIZE + 400,
@@ -133,9 +136,9 @@ int main (void)
 		tskIDLE_PRIORITY + 3,
 		NULL);
 		
-	xTaskCreate(&led_task,
-		(const signed char *)"LED task",
-		configMINIMAL_STACK_SIZE + 100,
+	xTaskCreate(&wifi_task,
+		(const signed char *)"WIFI task",
+		configMINIMAL_STACK_SIZE + 1000,
 		NULL,
 		tskIDLE_PRIORITY + 2,
 		NULL);

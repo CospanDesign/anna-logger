@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "anna-logger rev b", "anna-logger\anna-logger rev b.cproj", "{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}"
 EndProject
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "spi_master_vector_spi", "examples\spi_master_vector_spi\spi_master_vector_spi.cproj", "{D3AB640B-B257-451E-AF9A-859D13885B5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -13,6 +15,10 @@ Global
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Debug|ARM.Build.0 = Debug|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.ActiveCfg = Release|ARM
 		{CB72CCD7-242E-46EC-9A0B-170C3F36C1DF}.Release|ARM.Build.0 = Release|ARM
+		{D3AB640B-B257-451E-AF9A-859D13885B5B}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D3AB640B-B257-451E-AF9A-859D13885B5B}.Debug|ARM.Build.0 = Debug|ARM
+		{D3AB640B-B257-451E-AF9A-859D13885B5B}.Release|ARM.ActiveCfg = Release|ARM
+		{D3AB640B-B257-451E-AF9A-859D13885B5B}.Release|ARM.Build.0 = Release|ARM
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

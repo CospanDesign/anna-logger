@@ -240,9 +240,7 @@ void SpiReceiveHandler(void *pvBuffer)
  * \warning     This function must be called after wlan_init and
  *              before any other wlan API
  */
-
-void
-wlan_start(uint16_t usPatchesAvailableAtHost)
+void wlan_start(uint16_t usPatchesAvailableAtHost)
 {
 	uint32_t ulSpiIRQState;
 	
@@ -321,8 +319,7 @@ wlan_start(uint16_t usPatchesAvailableAtHost)
  * \note        
  * \warning     
  */
-void
-wlan_stop(void)
+void wlan_stop(void)
 {
     //
     // ASIC 1273 chip disable
@@ -410,8 +407,7 @@ int16_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
 
 	ARRAY_TO_STREAM(args, ssid, ssid_len);
 
-    if(key_len && key)
-    {
+    if(key_len && key){
     	ARRAY_TO_STREAM(args, key, key_len);
     }
 
@@ -429,8 +425,8 @@ int16_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
     return(ret);
 }
 #else
-int16_t
-wlan_connect(int8_t *ssid, int16_t ssid_len)
+
+int16_t wlan_connect(int8_t *ssid, int16_t ssid_len)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -484,8 +480,7 @@ wlan_connect(int8_t *ssid, int16_t ssid_len)
  * \note        
  * \warning     
  */
-int16_t
-wlan_disconnect()
+int16_t wlan_disconnect()
 {
     int16_t ret;
     uint8_t *ptr;
@@ -539,8 +534,7 @@ wlan_disconnect()
  * \warning     
  */
 
-int16_t
-wlan_ioctl_set_connection_policy(uint32_t should_connect_to_open_ap, 
+int16_t wlan_ioctl_set_connection_policy(uint32_t should_connect_to_open_ap, 
                                  uint32_t ulShouldUseFastConnect,
                                  uint32_t ulUseProfiles)
 {
@@ -608,8 +602,7 @@ wlan_ioctl_set_connection_policy(uint32_t should_connect_to_open_ap,
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-int16_t
-wlan_add_profile(uint32_t ulSecType, 
+int16_t wlan_add_profile(uint32_t ulSecType, 
 										uint8_t* ucSsid,
 										uint32_t ulSsidLen, 
 										uint8_t *ucBssid,
@@ -749,8 +742,7 @@ wlan_add_profile(uint32_t ulSecType,
  * \note        
  * \warning     
  */
-int16_t
-wlan_ioctl_del_profile(uint32_t ulIndex)
+int16_t wlan_ioctl_del_profile(uint32_t ulIndex)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -949,8 +941,7 @@ wlan_ioctl_set_scan_params(uint32_t uiEnable, uint32_t uiMinDwellTime,uint32_t u
  * \warning     
  */
 
-int16_t
-wlan_set_event_mask(uint32_t ulMask)
+int16_t wlan_set_event_mask(uint32_t ulMask)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -1052,8 +1043,7 @@ wlan_ioctl_statusget(void)
  * \note    An asynchnous event - First Time Config Done will be generated as soon as the process finishes successfully
  * \warning     
  */
-int16_t
-wlan_first_time_config_start(void)
+int16_t wlan_first_time_config_start(void)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -1085,8 +1075,7 @@ wlan_first_time_config_start(void)
  * \note      
  * \warning     
  */
-int16_t
-wlan_first_time_config_stop(void)
+int16_t wlan_first_time_config_stop(void)
 {
     int16_t ret;
     uint8_t *ptr;
@@ -1122,8 +1111,7 @@ wlan_first_time_config_stop(void)
  * \warning     
  */
 
-int16_t
-wlan_first_time_config_set_prefix(int8_t* cNewPrefix)
+int16_t wlan_first_time_config_set_prefix(int8_t* cNewPrefix)
 {
     int16_t ret;
     uint8_t *ptr;

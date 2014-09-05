@@ -189,7 +189,7 @@ typedef struct
 
 
 
-extern sSimplLinkInformation tSLInformation;
+extern volatile sSimplLinkInformation tSLInformation;
 
 
 //*****************************************************************************

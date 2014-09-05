@@ -42,6 +42,7 @@
  */
 
 #include <system.h>
+#include <asf.h>
 
 /**
  * \internal
@@ -80,6 +81,9 @@ void _system_extint_init(void);
 void HardFault_Handler(void)
 {
 	while (1) {
+		port_pin_set_output_level(ANNA_LED_WIFI_PIN, port_pin_get_output_level(ANNA_LED_ORG_PIN));
+		port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
+		delay_cycles_ms(100);
 		/* Infinite loop if CPU exception is detected */
 		Assert(false);
 	}

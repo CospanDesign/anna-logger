@@ -51,7 +51,7 @@ void system_board_init(void);
 /** \name ANNA_LED_ORG definitions       
  *  @{ */                                
 #define ANNA_LED_ORG_NAME                "ANNA_LED_ORG"
-#define ANNA_LED_ORG_PIN                 PIN_PA13
+#define ANNA_LED_ORG_PIN                 PIN_PA27
 #define ANNA_LED_ORG_ACTIVE              false
 #define ANNA_LED_ORG_INACTIVE            !ANNA_LED_ORG_ACTIVE
 #define ANNA_LED_ORG_GPIO 				 ANNA_LED_ORG_PIN
@@ -59,7 +59,7 @@ void system_board_init(void);
 /** \name ANNA_LED_WIFI definitions      
  *  @{ */                                
 #define ANNA_LED_WIFI_NAME               "ANNA_LED_WIFI"
-#define ANNA_LED_WIFI_PIN                PIN_PA27
+#define ANNA_LED_WIFI_PIN                PIN_PA13
 #define ANNA_LED_WIFI_ACTIVE             false
 #define ANNA_LED_WIFI_INACTIVE           !ANNA_LED_WIFI_ACTIVE
 #define ANNA_LED_WIFI_GPIO 				 ANNA_LED_WIFI_PIN
