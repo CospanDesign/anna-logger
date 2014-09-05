@@ -215,19 +215,34 @@ int16_t SpiWrite(uint8_t *data_out, uint16_t length){
 	
 	//Setup the CS_N
 	port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
+	spi_master_vec_lock(&anna_wifi_master);
 	
 	//First Write
 	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_transfer(data_out, 4, NULL, 0);
+	spi_data_out[0].data = &data_out;
+	spi_data_out[0].length = 4;
+	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, NULL);
 	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_transfer(&data_out[4], length - 4, NULL, 0);
+	spi_data_out[0].data = &data_out[4];
+	spi_data_out[0].length = length - 4;
+	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, NULL);
 	
 	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
-	
-	spi_transfer(data_out, length, NULL, 0);
+	spi_master_vec_unlock(&anna_wifi_master);
 	return 0;
 }
 int16_t SpiRead(uint8_t *data_in, uint16_t length){
+	
+	spi_data_in[0].data = &data_in;
+	spi_data_in[0].length = length;
+	
+	spi_master_vec_lock(&anna_wifi_master);
+	//port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
+	
+	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, NULL, spi_data_in);
+	
+	//port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
+	spi_master_vec_unlock(&anna_wifi_master);	
 	return 0;
 }
 void SpiPauseSpi(void){
