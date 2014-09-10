@@ -14,6 +14,8 @@
 #define WIFI_STATUS_CONNECTED 1
 
 
+
+
 typedef struct Result_Struct{
 	uint32_t  num_networks;
 	uint32_t  scan_status;

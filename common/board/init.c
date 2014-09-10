@@ -115,7 +115,8 @@ void configure_anna_wifi_spi( void )
 	struct spi_master_vec_config spi_config;
 	spi_master_vec_get_config_defaults(&spi_config);
 	
-    spi_config.baudrate = 200000;
+    //spi_config.baudrate = 8000000; //8 MHz
+	spi_config.baudrate = 200000;
     spi_config.transfer_mode = SPI_TRANSFER_MODE_1;
     spi_config.mux_setting = ANNA_WIFI_SPI_SERCOM_MUX_SETTING;
     spi_config.pinmux_pad0 = ANNA_WIFI_SPI_SERCOM_PINMUX_PAD0;

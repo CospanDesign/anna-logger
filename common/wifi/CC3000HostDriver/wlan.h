@@ -174,10 +174,10 @@ extern void wlan_stop(void);
  * \warning     
  */
 #ifndef CC3000_TINY_DRIVER
-extern int16_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
+extern int32_t wlan_connect(uint32_t ulSecType, const char *ssid, int16_t ssid_len,
                         uint8_t *bssid, uint8_t *key, int16_t key_len);
 #else
-extern int16_t wlan_connect(int8_t *ssid, int16_t ssid_len);
+extern int32_t wlan_connect(int8_t *ssid, int16_t ssid_len);
 
 #endif
 
@@ -194,7 +194,7 @@ extern int16_t wlan_connect(int8_t *ssid, int16_t ssid_len);
  * \warning     
  */
 
-extern int16_t wlan_disconnect(void);
+extern int32_t wlan_disconnect(void);
 
 /**
  * \brief add profile 
@@ -232,7 +232,7 @@ extern int16_t wlan_disconnect(void);
 
 
 #ifndef CC3000_TINY_DRIVER
-extern int16_t wlan_add_profile(uint32_t ulSecType, uint8_t* ucSsid,
+extern int32_t wlan_add_profile(uint32_t ulSecType, uint8_t* ucSsid,
 										 uint32_t ulSsidLen, 
 										 uint8_t *ucBssid,
                                          uint32_t ulPriority,
@@ -259,7 +259,7 @@ extern int16_t wlan_add_profile(uint32_t ulSecType, uint8_t* ucSsid,
  * \warning     
  */
 
-extern int16_t wlan_ioctl_del_profile(uint32_t ulIndex);
+extern int32_t wlan_ioctl_del_profile(uint32_t ulIndex);
 
 
 /**
@@ -285,7 +285,7 @@ extern int16_t wlan_ioctl_del_profile(uint32_t ulIndex);
  */
 
 
-extern int16_t wlan_set_event_mask(uint32_t ulMask);
+extern int32_t wlan_set_event_mask(uint32_t ulMask);
 
 
 /**
@@ -303,7 +303,7 @@ extern int16_t wlan_set_event_mask(uint32_t ulMask);
  * \warning     
  */
 
-extern int16_t wlan_ioctl_statusget(void);
+extern int32_t wlan_ioctl_statusget(void);
 
 /**
  * \brief set connection policy
@@ -341,7 +341,7 @@ extern int16_t wlan_ioctl_statusget(void);
  */
 
 
-extern int16_t wlan_ioctl_set_connection_policy(
+extern int32_t wlan_ioctl_set_connection_policy(
                                         uint32_t should_connect_to_open_ap,
                                         uint32_t should_use_fast_connect,
                                         uint32_t ulUseProfiles);
@@ -378,7 +378,7 @@ extern int16_t wlan_ioctl_set_connection_policy(
  */
 
 
-extern int16_t wlan_ioctl_get_scan_results(uint32_t ulScanTimeout,
+extern int32_t wlan_ioctl_get_scan_results(uint32_t ulScanTimeout,
                                        uint8_t *ucResults);
 
 /**
@@ -420,7 +420,7 @@ extern int16_t wlan_ioctl_get_scan_results(uint32_t ulScanTimeout,
  */
 
 
-extern int16_t wlan_ioctl_set_scan_params(uint32_t uiEnable,uint32_t uiMinDwellTime,uint32_t uiMaxDwellTime,
+extern int32_t wlan_ioctl_set_scan_params(uint32_t uiEnable,uint32_t uiMinDwellTime,uint32_t uiMaxDwellTime,
 										   uint32_t uiNumOfProbeResponces,uint32_t uiChannelMask,
 										   int16_t iRSSIThreshold,uint32_t uiSNRThreshold,
 										   uint32_t uiDefaultTxPower, uint32_t *aiIntervalList);
@@ -444,7 +444,7 @@ extern int16_t wlan_ioctl_set_scan_params(uint32_t uiEnable,uint32_t uiMinDwellT
  */
                                            
                                            
-extern int16_t wlan_first_time_config_start(void);
+extern int32_t wlan_first_time_config_start(void);
 
 
 /**
@@ -460,7 +460,7 @@ extern int16_t wlan_first_time_config_start(void);
  * \warning     
  */
 
-extern int16_t wlan_first_time_config_stop(void);
+extern int32_t wlan_first_time_config_stop(void);
 
 
 /**
@@ -480,7 +480,7 @@ extern int16_t wlan_first_time_config_stop(void);
  * \warning     
  */
 
-extern int16_t wlan_first_time_config_set_prefix(int8_t* cNewPrefix);
+extern int32_t wlan_first_time_config_set_prefix(int8_t* cNewPrefix);
 
 
 

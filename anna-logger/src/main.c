@@ -30,6 +30,8 @@
 #include <anna_logger_wifi.h>
 #include <cc3000_common.h>
 
+xQueueHandle * WIFI_queue;
+
 static void fatfs_task(void *params)
 {
 	char test_file_name[] = "0:sd_mmc_test.txt";
@@ -39,6 +41,7 @@ static void fatfs_task(void *params)
 	FIL file_object;
 
 	// Wait card present and ready
+	
 	do {
 		status = sd_mmc_test_unit_ready(0);
 		if (CTRL_FAIL == status) {
@@ -112,7 +115,7 @@ static void wifi_task(void *params)
 }
 
 static void adc_task(void * params){
-	dbg_print_str("In Fast LED FLash Task\r\n");
+	//dbg_print_str("In Fast LED FLash Task\r\n");
 	while (1){
 		port_pin_toggle_output_level(ANNA_LED_WIFI_PIN);
 		vTaskDelay(100 / portTICK_RATE_MS);		
@@ -124,6 +127,9 @@ int main (void)
 	system_init();
 	dbg_init();	
 	sd_mmc_init();
+	
+	//Create the queues that will throw around data
+	WIFI_queue = xQueueCreate(10, sizeof (wifi_queue_type_t));
 
 	//spi_wifi_init();
 
@@ -135,10 +141,10 @@ int main (void)
 		NULL,
 		tskIDLE_PRIORITY + 3,
 		NULL);
-		
+	
 	xTaskCreate(&wifi_task,
 		(const signed char *)"WIFI task",
-		configMINIMAL_STACK_SIZE + 1000,
+		configMINIMAL_STACK_SIZE + 400,
 		NULL,
 		tskIDLE_PRIORITY + 2,
 		NULL);

@@ -17,10 +17,10 @@
 #include <security.h>
 #include <evnt_handler.h>
 
-
+#define PRINT_EN				0
 #define DELAY(delay_timeout)  vTaskDelay(delay_timeout/portTICK_RATE_MS)
-#define PRINT(output_string)  dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string);
-#define PRINTLN(output_string)  dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string); dbg_print_str("\r\n");
+#define PRINT(output_string)  if (PRINT_EN){ dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string);}
+#define PRINTLN(output_string)  if (PRINT_EN){dbg_print_str(__func__ ); dbg_print_str(": "); dbg_print_str(output_string); dbg_print_str("\r\n");}
 
 #define CC3000_SUCCESS							(0)
 #define CHECK_SUCCESS(func,Notify,errorCode)  {if ((func) != CC3000_SUCCESS) { PRINTLN(Notify); return errorCode;}}
@@ -89,7 +89,7 @@ bool wifi_init(uint8_t patch_request, bool use_smart_config_data, const char *de
   
   //Setup the wireless stack with all the function pointers
   PRINTLN("Initializing")
-  wlan_init(  anna_logger_wifi_callback,
+  wlan_init(  &anna_logger_wifi_callback,
               sendWLFWPatch,
               sendDrivePatch,
               sendBootLoaderPatch,
@@ -101,7 +101,7 @@ bool wifi_init(uint8_t patch_request, bool use_smart_config_data, const char *de
 	  
   //Start the wireless stack
   wlan_start(patch_request);
-  PRINTLN("Initializing\n")
+  PRINTLN("Initialized\n")
 
   //Check if we need to erase the previously stored connection details
   if (!use_smart_config_data){

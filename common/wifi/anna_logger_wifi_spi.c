@@ -35,14 +35,10 @@ spi_information_t spi_information;
 #define SPI_HEADER_SIZE                 (5)
 
 #define SPI_STATE_POWERUP				(0)
-#define SPI_STATE_INITIALIZED			(1)
 #define SPI_STATE_IDLE					(2)
-#define SPI_STATE_WRITE_IRQ				(3)
-#define SPI_STATE_WRITE_FIRST_PORTION	(4)
-#define SPI_STATE_WRITE_EOT				(5)
-#define SPI_STATE_READ_IRQ				(6)
-#define SPI_STATE_READ_FIRST_PORTION	(7)
-#define SPI_STATE_READ_EOT				(8)
+#define SPI_STATE_WAIT_RESPONSE			(3)
+#define SPI_STATE_DETECT_IRQ			(4)
+
 
 bool IN_IRQ;
 bool IRQ_ENABLE;
@@ -59,77 +55,33 @@ void spi_wifi_init(void){
 	spi_data_in[1].length = 0;
 	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
 }
-uint8_t spi_transfer_byte(uint8_t data_out){
-	uint8_t data_in = 0;
-	spi_data_out[0].data = &data_out;
-	spi_data_out[0].length = 1;
-	
-	spi_data_in[0].data = &data_in;
-	spi_data_in[0].length = 1;
-	
-	spi_master_vec_lock(&anna_wifi_master);
-	port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
-	
-	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, spi_data_in);
-	
-	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
-	spi_master_vec_unlock(&anna_wifi_master);
-	return data_in;
-}
-void spi_transfer(void * data_out, uint16_t data_out_length, void * data_in, uint16_t data_in_length){
-	spi_data_out[0].data = &data_out;
-	spi_data_out[0].length = data_out_length;
-	
-	spi_data_in[0].data = &data_in;
-	spi_data_in[0].length = data_in_length;
-	
-	spi_master_vec_lock(&anna_wifi_master);
-	//port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
-	
-	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, spi_data_in);
-	
-	//port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
-	spi_master_vec_unlock(&anna_wifi_master);
-}
 
 static void wifi_interrupt_callback(void){
 	IN_IRQ = true;
 	
 	switch (spi_information.spi_state){
 		case (SPI_STATE_POWERUP):
-			//IRQ Line was low... perform a callback on the HCI layer
-			spi_information.spi_state = SPI_STATE_INITIALIZED;
+			//First IRQ went low, we can start our initial transaction
+			spi_information.spi_state = SPI_STATE_DETECT_IRQ;
 			break;
 		case (SPI_STATE_IDLE):
-			spi_information.spi_state = SPI_STATE_READ_IRQ;
-			//IRQ Line goes low, start reception
-			//Assert the CS line and wait till SSI IRQ line is active and then initialize a write operation
-			port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
-
-			//Wait for TX/RX to complete which will come as a DMA Interrupt
-//XXX: Read HEADER
-//			SpiReadHeader();
-			spi_information.spi_state = SPI_STATE_READ_EOT;
-//XXX: Continue reading
-//			SSIContReadOperation();
+			//We are either waiting to start a transaction, or the device has sent a request to start a transaction
+			if (port_pin_get_input_level(ANNA_WIFI_CS_N)){
+				xQueueSendToFrontFromISR(WIFI_queue, &spi_information.interrupt_semaphore, pdFALSE); 
+			}
+			spi_information.spi_state = SPI_STATE_DETECT_IRQ;
 			
 			break;
-		case (SPI_STATE_WRITE_IRQ):
-//XXX: Write data sychronously
+		case (SPI_STATE_WAIT_RESPONSE):
+			xQueueSendToFrontFromISR(WIFI_queue, &spi_information.interrupt_semaphore, pdFALSE); 		
+			spi_information.spi_state = SPI_STATE_DETECT_IRQ;
+			break;
+		case (SPI_STATE_DETECT_IRQ):
 			spi_information.spi_state = SPI_STATE_IDLE;
-			port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);			
 			break;
 		default:
 			break;
 	}
-	if (spi_information.spi_state == SPI_STATE_POWERUP){
-		//IRQ line was low ... perform a callback on the HCI Layer
-		spi_information.spi_state = SPI_STATE_INITIALIZED;
-	}
-	else if (spi_information.spi_state == SPI_STATE_IDLE){
-		
-	}
-	
 	
 	IN_IRQ = false;
 	return;
@@ -164,6 +116,7 @@ void SpiOpen(gcSpiHandleRx pfRxHandler){
 	spi_information.tx_packet			= NULL;
 	spi_information.rx_packet			= (uint8_t *)spi_buffer;
 	spi_information.rx_packet_length	= 0;
+	spi_information.interrupt_semaphore.interrupt	=	true;
 	
 	spi_buffer[CC3000_RX_BUFFER_SIZE - 1]		=	CC3000_BUFFER_MAGIC_NUMBER;
 	wlan_tx_buffer[CC3000_TX_BUFFER_SIZE - 1]	=	CC3000_BUFFER_MAGIC_NUMBER;
@@ -176,7 +129,7 @@ void SpiOpen(gcSpiHandleRx pfRxHandler){
 	eic_conf.gpio_pin = WIFI_IRQ_PIN;
 	eic_conf.gpio_pin_mux = WIFI_IRQ_MUX;
 	eic_conf.gpio_pin_pull = EXTINT_PULL_UP;
-	eic_conf.detection_criteria = EXTINT_DETECT_RISING;
+	eic_conf.detection_criteria = EXTINT_DETECT_FALLING;
 	
 	//Setup the external interrupt
 	extint_chan_set_config(     WIFI_IRQ_CHANNEL,
@@ -196,53 +149,69 @@ int16_t SpiWrite(uint8_t *data_out, uint16_t length){
 		pad++;	
 	}
 	
+	//First 5 bytes are a header
 	data_out[0] = WRITE;
 	data_out[1] = HI(length + pad);
 	data_out[2] = LO(length + pad);
 	data_out[3]	= 0;
 	data_out[4] = 0;
 	
-	length += (SPI_HEADER_SIZE + pad);
-	
-	//The magic number that resides at the end of the TX/RX buffer (1 byte after the allocation size)
-	//	for the purpose of overrun detection.
-	//	occurred we will be stuck here forever
-	
-	if (wlan_tx_buffer[CC3000_TX_BUFFER_SIZE - 1] != CC3000_BUFFER_MAGIC_NUMBER){
-		//Error, no magic number found!
-		while (1);
+	length += pad;
+	while (spi_information.spi_state == SPI_STATE_POWERUP){
+		//Wait here until the interrupt line has gone low indicating the device is ready for the first transaction
 	}
 	
-	//Setup the CS_N
+	//SPI is ours! (Don't need it we are the only task interfacing with this device
 	port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
-	spi_master_vec_lock(&anna_wifi_master);
-	
-	//First Write
-	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_data_out[0].data = &data_out;
-	spi_data_out[0].length = 4;
+	while (spi_information.spi_state != SPI_STATE_DETECT_IRQ){
+		//Wait here until the interrupt line has gone low indicating the device is ready for a transaction
+	}
+	WlanInterruptDisable();
+	vTaskDelay(0.5 / portTICK_RATE_MS);
+	spi_data_out[0].data = data_out;
+	spi_data_out[0].length = SPI_HEADER_SIZE;
 	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, NULL);
-	vTaskDelay(1 / portTICK_RATE_MS);
-	spi_data_out[0].data = &data_out[4];
-	spi_data_out[0].length = length - 4;
+	vTaskDelay(0.5 / portTICK_RATE_MS);
+	spi_data_out[0].data = &data_out[SPI_HEADER_SIZE];
+	spi_data_out[0].length = length;
 	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, NULL);
 	
 	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
-	spi_master_vec_unlock(&anna_wifi_master);
+	spi_information.spi_state = SPI_STATE_IDLE;
+	WlanInterruptEnable();
 	return 0;
 }
+
 int16_t SpiRead(uint8_t *data_in, uint16_t length){
 	
-	spi_data_in[0].data = &data_in;
-	spi_data_in[0].length = length;
+	//First 5 bytes are a header
+	uint8_t data_out[5] = { READ, 0, 0, 0, 0 };
+
+	//This should already be low
+	while (spi_information.spi_state != SPI_STATE_DETECT_IRQ){
+		vTaskDelay(1 / portTICK_RATE_MS);
+	}	
+	port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
+	vTaskDelay(1 / portTICK_RATE_MS);
+	spi_data_out[0].data = data_out;
+	spi_data_out[0].length = SPI_HEADER_SIZE;
 	
-	spi_master_vec_lock(&anna_wifi_master);
-	//port_pin_set_output_level(ANNA_WIFI_CS_N, LOW);
+	spi_data_in[0].data = spi_buffer;
+	spi_data_in[0].length = SPI_HEADER_SIZE;
+	
+	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, spi_data_out, spi_data_in);
+	spi_information.rx_packet_length =  (spi_buffer[3] << 8) |  spi_buffer[4];
+	vTaskDelay(1 / portTICK_RATE_MS);
+	//Read the rest of the data
+	//spi_data_in[0].data = &spi_buffer[SPI_HEADER_SIZE];
+	spi_data_in[0].data = spi_buffer;
+	spi_data_in[0].length = spi_information.rx_packet_length;
 	
 	spi_master_vec_transceive_buffer_wait(&anna_wifi_master, NULL, spi_data_in);
 	
-	//port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
-	spi_master_vec_unlock(&anna_wifi_master);	
+	port_pin_set_output_level(ANNA_WIFI_CS_N, HIGH);
+	spi_information.spi_state = SPI_STATE_IDLE;
+
 	return 0;
 }
 void SpiPauseSpi(void){
@@ -250,26 +219,30 @@ void SpiPauseSpi(void){
 	WlanInterruptDisable();
 }
 void SpiResumeSpi(void){
-	WlanInterruptEnable();
-	IRQ_ENABLE = true;
+	if (!IRQ_ENABLE){
+		WlanInterruptEnable();
+		IRQ_ENABLE = true;
+	}
+	
 }
+
 int16_t ReadWlanInterruptPin(void){
 	return port_pin_get_input_level(ANNA_WIFI_IRQ_PIN);
 }
 void WlanInterruptEnable(void){
 	//Enable the callback
-	extint_chan_enable_callback(WIFI_IRQ_CHANNEL,
-	EXTINT_CALLBACK_TYPE_DETECT);	
+	extint_chan_enable_callback(WIFI_IRQ_CHANNEL, EXTINT_CALLBACK_TYPE_DETECT);	
+	IRQ_ENABLE = true;
 }
 void WlanInterruptDisable(void){
 	//Disable the callback
 	extint_chan_disable_callback(WIFI_IRQ_CHANNEL,
 	EXTINT_CALLBACK_TYPE_DETECT);
 }
-
 void WriteWlanPin(uint8_t val){
 	port_pin_set_output_level(ANNA_WIFI_EN, val);
 }
+
 int8_t * sendDrivePatch(uint32_t *length){
 	*length = 0;
 	return NULL;

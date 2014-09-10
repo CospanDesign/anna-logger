@@ -7,7 +7,17 @@
 typedef void (*gcSpiHandleRx)(void *p);
 typedef void (*gcSpiHandleTx)(void);
 
+#include <asf.h>
+
+extern xQueueHandle * WIFI_queue;
+
 extern uint8_t wlan_tx_buffer[];
+
+
+typedef struct _wifi_queue_type_t {
+	bool interrupt;
+	uint8_t * data;
+} wifi_queue_type_t;
 
 //Mandatory Functions Are:
 
@@ -35,6 +45,8 @@ typedef struct
 
 	uint8_t			*tx_packet;
 	uint16_t		tx_packet_length;
+	
+	wifi_queue_type_t interrupt_semaphore;
 } spi_information_t;
 
 extern spi_information_t spi_information;
@@ -42,10 +54,7 @@ extern spi_information_t spi_information;
 //uint8_t wlan_tx_buffer[];
 //uint8_t wlan_rx_buffer[];
 void spi_wifi_init(void);
-/*
-uint8_t spi_transfer_byte(uint8_t data_out);
-void spi_transfer(void * data_out, uint16_t data_out_length, void * data_in, uint16_t data_in_length);
-*/
+
 
 
 extern void SpiClose(void);

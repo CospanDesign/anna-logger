@@ -359,26 +359,26 @@
       <ToolName>EDBG</ToolName>
     </com_atmel_avrdbg_tool_edbg>
     <PercepioTrace>
-      <TargetOS xmlns="">FreeRTOS</TargetOS>
-      <Frequency xmlns="">64000000</Frequency>
-      <EnableTraceInterrupts xmlns="">True</EnableTraceInterrupts>
-      <EnableNonintrusive xmlns="">True</EnableNonintrusive>
-      <EnableTargetOS xmlns="">True</EnableTargetOS>
-      <EnableApplicationOutput xmlns="">True</EnableApplicationOutput>
-      <EnableDataWatchPoints xmlns="">True</EnableDataWatchPoints>
-      <EnablePC xmlns="">False</EnablePC>
-      <EnablePCPolled xmlns="">False</EnablePCPolled>
-      <PolledFrequency xmlns="">1000</PolledFrequency>
-      <EnableMcu xmlns="">False</EnableMcu>
-      <EnableOsAwareness xmlns="">False</EnableOsAwareness>
-      <HWApplicationOutput xmlns="">False</HWApplicationOutput>
-      <HWInterrupt xmlns="">False</HWInterrupt>
-      <HWIntrusiveDataWatch xmlns="">True</HWIntrusiveDataWatch>
-      <HWNonintrusiveDataWatch xmlns="">False</HWNonintrusiveDataWatch>
-      <HWPolledDataWatch xmlns="">True</HWPolledDataWatch>
-      <HWPolledProgramCounterSampling xmlns="">True</HWPolledProgramCounterSampling>
-      <HWProfiling xmlns="">False</HWProfiling>
-      <HWProgramCounterSampling xmlns="">False</HWProgramCounterSampling>
+      <TargetOS>FreeRTOS</TargetOS>
+      <Frequency>64000000</Frequency>
+      <EnableTraceInterrupts>True</EnableTraceInterrupts>
+      <EnableNonintrusive>False</EnableNonintrusive>
+      <EnableTargetOS>True</EnableTargetOS>
+      <EnableApplicationOutput>True</EnableApplicationOutput>
+      <EnableDataWatchPoints>True</EnableDataWatchPoints>
+      <EnablePC>False</EnablePC>
+      <EnablePCPolled>False</EnablePCPolled>
+      <PolledFrequency>1000</PolledFrequency>
+      <EnableMcu>False</EnableMcu>
+      <EnableOsAwareness>False</EnableOsAwareness>
+      <HWApplicationOutput>False</HWApplicationOutput>
+      <HWInterrupt>False</HWInterrupt>
+      <HWIntrusiveDataWatch>True</HWIntrusiveDataWatch>
+      <HWNonintrusiveDataWatch>False</HWNonintrusiveDataWatch>
+      <HWPolledDataWatch>True</HWPolledDataWatch>
+      <HWPolledProgramCounterSampling>True</HWPolledProgramCounterSampling>
+      <HWProfiling>False</HWProfiling>
+      <HWProgramCounterSampling>False</HWProgramCounterSampling>
     </PercepioTrace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -585,7 +585,6 @@
       <Value>../src/ASF/sam0/drivers/extint</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
-  <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
   <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
   <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>

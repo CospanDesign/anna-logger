@@ -48,6 +48,7 @@
 #include "netapp.h"
 #include "anna_logger_wifi_spi.h"
 
+#include <asf.h>
 
 uint32_t socket_active_status = SOCKET_STATUS_INIT_VAL;  
 
@@ -208,23 +209,23 @@ void hci_unsol_handle_patch_request(int8_t *event_hdr)
 //
 //*****************************************************************************
 
-uint8_t *
-hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
+uint8_t * hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 {
-	uint8_t *pucReceivedData, ucArgsize;
-    uint16_t usLength;
+	uint8_t *pucReceivedData;
+	uint8_t ucArgsize = 0;
+    uint16_t usLength = 0;
 	uint8_t *pucReceivedParams;
 	uint16_t usReceivedEventOpcode = 0;
 	uint32_t retValue32;
+	wifi_queue_type_t queue_data;
 	
-	while (1)
-	{
-		if (tSLInformation.usEventOrDataReceived != 0)
-		{				
+	while (1){
+		//port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
+		//vTaskDelay(1 / portTICK_RATE_MS);
+		
+		if (tSLInformation.usEventOrDataReceived != 0){				
 			pucReceivedData = (tSLInformation.pucReceivedData);
-			
-			if (*pucReceivedData == HCI_TYPE_EVNT)
-			{
+			if (*pucReceivedData == HCI_TYPE_EVNT){
 				//
 				// Event Received
 				//
@@ -233,17 +234,13 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 				//
 				// In case unsolicited event received - here the handling finished
 				//
-				if (hci_unsol_event_handler((int8_t *)pucReceivedData) == 0)
-				{
+				if (hci_unsol_event_handler((int8_t *)pucReceivedData) == 0) {
 					STREAM_TO_uint8_t(pucReceivedData, HCI_DATA_LENGTH_OFFSET, usLength);
-					switch(usReceivedEventOpcode)
-				    {		
+					switch(usReceivedEventOpcode){		
 				    	case HCI_CMND_READ_BUFFER_SIZE:
-						{
 							STREAM_TO_uint8_t((int8_t *)pucReceivedParams, 0, tSLInformation.usNumberOfFreeBuffers);
 							STREAM_TO_uint16_t((int8_t *)pucReceivedParams, 1, tSLInformation.usSlBufferLength);
-				    	}
-						break;
+							break;
 
 						case HCI_CMND_WLAN_CONFIGURE_PATCH:
 						case HCI_NETAPP_DHCP:
@@ -255,7 +252,7 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 						case HCI_EVNT_NVMEM_READ:
 				        case HCI_EVNT_NVMEM_CREATE_ENTRY:
 						case HCI_CMND_NVMEM_WRITE_PATCH:
-						 case HCI_NETAPP_PING_REPORT:
+						case HCI_NETAPP_PING_REPORT:
 							STREAM_TO_uint8_t(pucReceivedData, HCI_EVENT_STATUS_OFFSET,*(uint8_t *)pRetParams);
 							break;
 							
@@ -275,8 +272,8 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 						case HCI_EVNT_BIND:
 						case HCI_CMND_LISTEN:
 			  			case HCI_EVNT_CLOSE_SOCKET:
-                                                case HCI_EVNT_CONNECT:
-												case HCI_EVNT_NVMEM_WRITE:
+                        case HCI_EVNT_CONNECT:
+						case HCI_EVNT_NVMEM_WRITE:
 
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,0,*(uint32_t *)pRetParams);
 							break;
@@ -285,48 +282,35 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 							pRetParams = ((int8_t *)pRetParams) + 1;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams, 0, retValue32);
 							UINT32_TO_STREAM((uint8_t *)pRetParams, retValue32);
-							
 							break;
 				        
                         case HCI_EVNT_BSD_GETHOSTBYNAME:
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,GET_HOST_BY_NAME_RETVAL_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,GET_HOST_BY_NAME_ADDR_OFFSET,*(uint32_t *)pRetParams);
-                           
                             break;
 				        
 				        case HCI_EVNT_ACCEPT:
-				        {
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,ACCEPT_SD_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,ACCEPT_RETURN_STATUS_OFFSET,*(uint32_t *)pRetParams);
                             pRetParams = ((int8_t *)pRetParams) + 4; 
-							//This argurment returns in network order, therefore the use of memcpy.                                                      
+							//This argument returns in network order, therefore the use of memcpy.                                                      
 							memcpy((uint8_t *)pRetParams, pucReceivedParams, sizeof(sockaddr));
+    			            break;
 
-
-				            break;
-				        }
-						
 				        case HCI_EVNT_RECV:
 				        case HCI_EVNT_RECVFROM:
-				        {
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SL_RECEIVE_SD_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SL_RECEIVE_NUM_BYTES_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SL_RECEIVE__FLAGS__OFFSET,*(uint32_t *)pRetParams);
-							
-                            if(((tBsdReadReturnParams *)pRetParams)->iNumberOfBytes == ERROR_SOCKET_INACTIVE)
-                            {
-                                set_socket_active_status(((tBsdReadReturnParams *)pRetParams)->iSocketDescriptor,
-                                                         SOCKET_STATUS_INACTIVE);
+                            if(((tBsdReadReturnParams *)pRetParams)->iNumberOfBytes == ERROR_SOCKET_INACTIVE){
+                                set_socket_active_status(((tBsdReadReturnParams *)pRetParams)->iSocketDescriptor, SOCKET_STATUS_INACTIVE);
                             }
  				            break;
-				        }
-				        
 				        case HCI_EVNT_SELECT:
-				        { 
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SELECT_STATUS_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SELECT_READFD_OFFSET,*(uint32_t *)pRetParams);
@@ -334,124 +318,95 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SELECT_WRITEFD_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,SELECT_EXFD_OFFSET,*(uint32_t *)pRetParams);
-
 				            break;
-				        }
 
 						case HCI_CMND_GETSOCKOPT:
 							STREAM_TO_uint8_t(pucReceivedData, HCI_EVENT_STATUS_OFFSET,((tBsdGetSockOptReturnParams *)pRetParams)->iStatus);
-							//This argurment returns in network order, therefore the use of memcpy.  
+							//This argument returns in network order, therefore the use of memcpy.  
 							memcpy((uint8_t *)pRetParams, pucReceivedParams, 4);
 							break;
 
-                    case HCI_CMND_WLAN_IOCTL_GET_SCAN_RESULTS:
-
+						case HCI_CMND_WLAN_IOCTL_GET_SCAN_RESULTS:
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_TABlE_COUNT_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;                                                        
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_SCANRESULT_STATUS_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;                                                        
-
                             STREAM_TO_uint16_t((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_ISVALID_TO_SSIDLEN_OFFSET,*(uint32_t *)pRetParams);
                             pRetParams = ((int8_t *)pRetParams) + 2;   
-
                             STREAM_TO_uint16_t((int8_t *)pucReceivedParams,GET_SCAN_RESULTS_FRAME_TIME_OFFSET,*(uint32_t *)pRetParams);
                             pRetParams = ((int8_t *)pRetParams) + 2;  
- 
                             memcpy((uint8_t *)pRetParams, (int8_t *)(pucReceivedParams + GET_SCAN_RESULTS_FRAME_TIME_OFFSET + 2), GET_SCAN_RESULTS_SSID_MAC_LENGTH);
-
-                     
-
-
-
-
-					
 							break;
 
 						case HCI_CMND_SIMPLE_LINK_START:
 							break;
 
 						case HCI_NETAPP_IPCONFIG:
-							
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_IP_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
-                                                        
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_SUBNET_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
-                                                        
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_GW_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
-                                                        
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_DHCP_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
-                                                        
 							STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_DNS_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 4;
-                                                        
-                                                        STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_MAC_OFFSET,*(uint32_t *)pRetParams);
+                            STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_MAC_OFFSET,*(uint32_t *)pRetParams);
 							pRetParams = ((int8_t *)pRetParams) + 6;
-                                                        
-                                                        STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_SSID_OFFSET,*(uint32_t *)pRetParams);
-							
-														
+                            STREAM_TO_UINT32((int8_t *)pucReceivedParams,NETAPP_IPCONFIG_SSID_OFFSET,*(uint32_t *)pRetParams);
 					}
 				}
-
-				if (usReceivedEventOpcode == tSLInformation.usRxEventOpcode)
-				{
+				if (usReceivedEventOpcode == tSLInformation.usRxEventOpcode){
 					tSLInformation.usRxEventOpcode = 0;
 				}
 			}
-			else
-			{
+			else{
                         
                 pucReceivedParams = pucReceivedData;
+
                 STREAM_TO_uint8_t((int8_t *)pucReceivedData, HCI_PACKET_ARGSIZE_OFFSET, ucArgsize);
-                                
 				STREAM_TO_uint16_t((int8_t *)pucReceivedData, HCI_PACKET_LENGTH_OFFSET, usLength);
 				
 				//
 				// Data received: note that the only case where from and from length are not null is in 
 				// recv from, so fill the args accordingly
 				//
-				if (from)
-				{
+				if (from) {
 					STREAM_TO_UINT32((int8_t *)(pucReceivedData + HCI_DATA_HEADER_SIZE),
 												BSD_RECV_FROM_FROMLEN_OFFSET,
 												*(uint32_t *)fromlen);
-					memcpy(from,
-						   (pucReceivedData + HCI_DATA_HEADER_SIZE + BSD_RECV_FROM_FROM_OFFSET) ,
-						   *fromlen);
+					memcpy(from, (pucReceivedData + HCI_DATA_HEADER_SIZE + BSD_RECV_FROM_FROM_OFFSET), *fromlen);
 				}
-
-				memcpy(pRetParams, pucReceivedParams + HCI_DATA_HEADER_SIZE + ucArgsize,
-							usLength - ucArgsize);
-				
+				memcpy(pRetParams, pucReceivedParams + HCI_DATA_HEADER_SIZE + ucArgsize, usLength - ucArgsize);
 				tSLInformation.usRxDataPending = 0;
 			}
-
-			
 			tSLInformation.usEventOrDataReceived = 0;
-                        
-                        
-			SpiResumeSpi();
+//XXX			//SpiResumeSpi();
 
 			//
 			// Since we are going to TX - we need to handle this event after the ResumeSPi since we need interrupts
 			// 
-			if ((*pucReceivedData == HCI_TYPE_EVNT) && (usReceivedEventOpcode == HCI_EVNT_PATCHES_REQ))
-			{
+			if ((*pucReceivedData == HCI_TYPE_EVNT) && (usReceivedEventOpcode == HCI_EVNT_PATCHES_REQ)){
 				hci_unsol_handle_patch_request((int8_t *)pucReceivedData);
 			}
 
-			if ((tSLInformation.usRxEventOpcode == 0) && (tSLInformation.usRxDataPending == 0))
-			{
+			if ((tSLInformation.usRxEventOpcode == 0) && (tSLInformation.usRxDataPending == 0)){
 				return NULL;
 			}
-                        
-                   
+		}
+		else {
+			//xQueueReceive(WIFI_queue, &queue_data, 10 / portTICK_RATE_MS);
+			xQueueReceive(WIFI_queue, &queue_data, portMAX_DELAY);
+			if (queue_data.interrupt){
+				SpiRead(spi_information.rx_packet, spi_information.rx_packet_length);
+				spi_information.spi_rx_handler(spi_information.rx_packet);	
+			}
+			//else if (queue_data != NULL){
+				//received data from the host, process it	
+			//}
 		}
 	}
-
 }
 
 //*****************************************************************************
@@ -470,9 +425,7 @@ hci_event_handler(void *pRetParams, uint8_t *from, uint8_t *fromlen)
 //!  @brief              This function is Network Application events handler.
 //
 //*****************************************************************************
-int16_t
-hci_unsol_event_handler(int8_t *event_hdr)
-{
+int16_t hci_unsol_event_handler(int8_t *event_hdr){
     int8_t * data = NULL;
     unsigned long event_type;
 
