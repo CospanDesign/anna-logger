@@ -247,22 +247,22 @@ bool set_dhcp(){
 }
 
 //Wireless
-bool connect_to_ap(const char *ssid, const char *key, uint8_t secmode, uint8_t attempts){
+bool connect_to_ap(const char *ssid, const char *key, uint8_t secmode, uint8_t retry_attempts){
   if ((cc3000_flags & INITIALIZED) == 0){
     //We're not even initialized, return
     return false;
   }
   int16_t timer = 0;
-  bool retry_forever = (attempts = 0);
+  bool retry_forever = (retry_attempts == 0);
 
   do {
     //see if this is the last retry
     if (!retry_forever){
       //we will not retry forever
-      if (attempts == 0){
+      if (retry_attempts == 0){
         return check_connected();
       } 
-      attempts -= 1;
+      retry_attempts -= 1;
     }
     cc3k_int_poll();
     

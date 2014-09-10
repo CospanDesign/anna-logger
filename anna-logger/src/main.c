@@ -29,6 +29,8 @@
 #include <sd_mmc_mem.h>
 #include <anna_logger_wifi.h>
 #include <cc3000_common.h>
+#include <ap.h>
+#include <wlan.h>
 
 xQueueHandle * WIFI_queue;
 
@@ -107,10 +109,88 @@ main_end_of_test:
 
 static void wifi_task(void *params)
 {
+	uint32_t ip;
+	uint32_t netmask;
+	uint32_t gateway;
+	uint32_t dhcp_server;
+	uint32_t dns_server;
+	
 	wifi_init(0, false, "WIFI");
+	
+	dbg_print_str("Attempt to connect to AP: ");
+	dbg_print_str(AP_NAME);
+	dbg_print_str("...");
+	
+	if (!connect_to_ap(AP_NAME, AP_PASSWORD, WLAN_SEC_WPA2, (uint8_t )3)){
+		dbg_print_str("Failed!\r\n");
+		while (1) {
+			port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
+			vTaskDelay(100 / portTICK_RATE_MS);
+		};
+	}
+	dbg_print_str("Connected!\r\n");
+	
+	dbg_print_str("Request DHCP");
+	while (!check_dhcp()){
+		vTaskDelay(100);
+		dbg_print_str(".");
+	}
+	dbg_print_str("Found!\r\n");
+	dbg_print_str("Details:\r\n");
+	get_ip_address(&ip, &netmask, &gateway, &dhcp_server, &dns_server);
+	dbg_print_str("IP: ");
+	dbg_print_str((uint8_t) ip >> 24);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) ip >> 16);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) ip >> 8);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) ip);
+	dbg_print_str("\r\n");
+
+	dbg_print_str("Netmask: ");
+	dbg_print_str((uint8_t) netmask >> 24);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) netmask >> 16);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) netmask >> 8);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) netmask);
+	dbg_print_str("\r\n");
+	
+	dbg_print_str("Gateway: ");
+	dbg_print_str((uint8_t) gateway >> 24);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) gateway >> 16);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) gateway >> 8);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) gateway);
+	dbg_print_str("\r\n");
+		
+	dbg_print_str("DHCP Server: ");
+	dbg_print_str((uint8_t) dhcp_server >> 24);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dhcp_server >> 16);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dhcp_server >> 8);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dhcp_server);
+	dbg_print_str("\r\n");
+	
+	dbg_print_str("DSN Server: ");
+	dbg_print_str((uint8_t) dns_server >> 24);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dns_server >> 16);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dns_server >> 8);
+	dbg_print_str(".");
+	dbg_print_str((uint8_t) dns_server);
+	dbg_print_str("\r\n");
+			
 	while (1) {
 		port_pin_toggle_output_level(ANNA_LED_ORG_PIN);
-		vTaskDelay(333 / portTICK_RATE_MS);
+		vTaskDelay(1000 / portTICK_RATE_MS);
 	};
 }
 

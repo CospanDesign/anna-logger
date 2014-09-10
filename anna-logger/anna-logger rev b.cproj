@@ -790,6 +790,10 @@
       <SubType>compile</SubType>
       <Link>src\WIFI\anna_logger_wifi_spi.h</Link>
     </Compile>
+    <Compile Include="..\common\wifi\ap.h">
+      <SubType>compile</SubType>
+      <Link>src\ap.h</Link>
+    </Compile>
     <Compile Include="..\common\wifi\CC3000HostDriver\cc3000_common.c">
       <SubType>compile</SubType>
       <Link>src\WIFI\cc3000_common.c</Link>
@@ -865,6 +869,14 @@
     <Compile Include="..\common\wifi\CC3000HostDriver\wlan.h">
       <SubType>compile</SubType>
       <Link>src\WIFI\wlan.h</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\http_server.c">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\http_server.c</Link>
+    </Compile>
+    <Compile Include="..\common\wifi\http_server.h">
+      <SubType>compile</SubType>
+      <Link>src\WIFI\http_server.h</Link>
     </Compile>
     <Compile Include="src\ASF\common2\components\memory\sd_mmc\sd_mmc.c">
       <SubType>compile</SubType>
