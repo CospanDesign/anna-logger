@@ -15,7 +15,11 @@ local.properties
 .classpath
 .settings/
 .loadpath
+
+
 *.atsuo
+common/wifi/ap.h
+
 
 # External tool builders
 .externalToolBuilders/
