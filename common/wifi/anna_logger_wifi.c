@@ -89,7 +89,7 @@ bool wifi_init(uint8_t patch_request, bool use_smart_config_data, const char *de
   
   //Setup the wireless stack with all the function pointers
   PRINTLN("Initializing")
-  wlan_init(  &anna_logger_wifi_callback,
+  wlan_init(  anna_logger_wifi_callback,
               sendWLFWPatch,
               sendDrivePatch,
               sendBootLoaderPatch,
@@ -276,6 +276,7 @@ bool connect_to_ap(const char *ssid, const char *key, uint8_t secmode, uint8_t r
     if ((secmode == 0) || strlen(key) == 0){
       //connect to an unsecured network
       if (!connect_open(ssid)){
+		  return false;
 //XXX: Failed to connect, need a way to indicate this to the user
       }
       continue;
@@ -284,6 +285,7 @@ bool connect_to_ap(const char *ssid, const char *key, uint8_t secmode, uint8_t r
       //XXX: NOTE: Secure connections are not availbalbe in 'Tiny' mode!
 #ifndef CC3000_TINY_DRIVER
       if (! connect_to_secure(ssid, key, secmode)){
+		  return false;
 //XXX: Failed to connect, need a way to indicate this to the user
       }
       continue;
